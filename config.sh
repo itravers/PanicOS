@@ -3,7 +3,6 @@
 # About : This file sets up the configuration options for PanicOS
 #         by exporting specific cross-compiler toolchain settings
 #         to the host systems path variables.
-# Info  : Parts of this file were excerpted from osdev.org
 ################################################################# 
 SYSTEM_HEADER_PROJECTS="libc kernel"
 PROJECTS="libc kernel"
