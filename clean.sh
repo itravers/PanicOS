@@ -2,7 +2,7 @@
 # Author: Isaac Assegai
 # Date  : 6/1/15
 # About : Cleans the project of all compile files.
-# Info  : Parts of this file may have been excerpted from osdev.com
+###################################################################
 set -e
 . ./config.sh
 

@@ -3,6 +3,7 @@
 # Date   : 6/1/2015
 # About  : Create ISO install it to the iso boot directory
 #        : and adjust our grub config to show our new kernel
+############################################################
 set -e
 . ./build.sh
 
