@@ -15,5 +15,6 @@ void kernel_early(void){
 }
 
 void kernel_main(void){
-	printf("Hello, kernel World!\n");
+	for(int i = 0; i < 50; i++)
+		printf("Holy Sh*t I'm in kernel Space!!\n");
 }
