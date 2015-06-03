@@ -15,8 +15,8 @@ void kernel_early(void){
 }
 
 void kernel_main(void){
-	char* trans;
-	printf("Hello %i there!\n", 13);
+	for(int i = 0; i < 30; i++)
+		printf("Hello %i there!\n", i);
 
 	//char* s = "Hello\0";
 	//printf(reverseString(s));
