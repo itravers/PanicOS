@@ -15,11 +15,18 @@ void kernel_early(void){
 }
 
 void kernel_main(void){
-	int charsPrinted = 0;
+	char* s = "Hello\0";
+	printf(reverseString(s));
+
+
+
+/*	int charsPrinted = 0;
+
 	for(int i = 0; i < 15; i++){
 		charsPrinted += printf("%s Holy Sh*t I'm in kernel Space!!\n", 
 					  "thisisarg1");
 		printf("Printed %c Chars\n", i + 48);
 	}
+*/
 	
 }
