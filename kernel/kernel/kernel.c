@@ -15,8 +15,11 @@ void kernel_early(void){
 }
 
 void kernel_main(void){
-	char* s = "Hello\0";
-	printf(reverseString(s));
+	char* trans;
+	printf("Hello %i there!\n", 13);
+
+	//char* s = "Hello\0";
+	//printf(reverseString(s));
 
 
 

@@ -51,10 +51,13 @@ int printf(const char* restrict format, ...){
 			goto print_c;
 		}
 
-		if ( *format == 'c' ){ /* Convert next argument to and int and print it. */
+		if ( *format == 'i' ){ /* Convert next argument to and int and print it. */
 			format++;
-			char c = (char) va_arg(parameters, int /* Convert char to int.*/);
-			print(&c, sizeof(c));
+			char* s;
+			s = itoa( va_arg(parameters, int), s, 10);
+			print(s, strlen(s));
+			//char c = (char) va_arg(parameters, int /* Convert char to int.*/);
+			//print(&c, sizeof(c));
 		}
 		else if ( *format == 's' ){ /* Print String in next argument. */
 			format++;

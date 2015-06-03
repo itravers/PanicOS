@@ -41,7 +41,8 @@ string/memcpy.o \
 string/memmove.o \
 string/memset.o \
 string/strlen.o \
-string/reverseString.o
+string/reverseString.o \
+string/itoa.o
 
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \
