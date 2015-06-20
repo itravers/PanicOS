@@ -16,18 +16,14 @@ void outportb (unsigned short _port, unsigned char _data)
     __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
 }
 
-int main()
-{
-//    int i;
-
-    gdt_install();
-    idt_install();
+int main(){
+	gdt_install();
+	idt_install();
     isrs_install();
     irq_install();
     terminal_initialize();
-//    init_video();
     timer_install();
-//    keyboard_install();
+    keyboard_install();
 
     __asm__ __volatile__ ("sti");
 
@@ -35,9 +31,6 @@ int main()
 		printf("Hello World!\n");
 	}
 //	setWelcomeScreen();
-
-//    i = 10 / 0;
-//    putch(i);
 
     for (;;);
 	return 0;
