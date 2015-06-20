@@ -37,12 +37,13 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y){
 }
 
 void scroll(void){
-    unsigned blank, temp;
+    uint16_t blank, temp;
 
     /* A blank is defined as a space... we need to give it
     *  backcolor too */
     //blank = 0x20 | (attrib << 8);
-	blank = make_vgaentry(' ', terminal_color);
+	terminal_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
+	blank = make_vgaentry('.', terminal_color);
 
     /* Row 25 is the end, this means we need to scroll up */
     if(terminal_row >= 25)
@@ -54,8 +55,11 @@ void scroll(void){
 
         /* Finally, we set the chunk of memory that occupies
         *  the last line of text to our 'blank' character */
-        memset (VGA_MEMORY + (25 - temp) * 80, blank, 80);
-        terminal_row = 25 - 1;
+        //memset (VGA_MEMORY + (25 - temp) * 80, blank, 80);
+	for(int i = 0; i < 80; i++)
+		terminal_putentryat(' ', terminal_color, i, 24);
+
+	terminal_row = 25 - 1;
     }
 }
 
@@ -66,6 +70,10 @@ void terminal_putchar(char c){
 		terminal_row++;
 	}else{
 		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+	}
+	
+	if(++terminal_column == VGA_WIDTH){
+		terminal_column = 0;
 	}
 	scroll(); //scroll if needed
 }

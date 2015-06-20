@@ -31,7 +31,9 @@ int main()
 
     __asm__ __volatile__ ("sti");
 
-    printf("Hello World!\n");
+	for(int i = 0; i < 20; i++){
+		printf("Hello World!\n");
+	}
 //	setWelcomeScreen();
 
 //    i = 10 / 0;
