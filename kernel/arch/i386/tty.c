@@ -22,7 +22,7 @@ void terminal_initialize(void){
 	for ( size_t y = 0; y < VGA_HEIGHT; y++ ){
 		for ( size_t x = 0; x < VGA_WIDTH; x++ ){
 			const size_t index = y * VGA_WIDTH + x;
-			terminal_buffer[index] = make_vgaentry('.', terminal_color);
+			terminal_buffer[index] = make_vgaentry(' ', terminal_color);
 		}
 	}
 }

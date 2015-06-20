@@ -26,10 +26,10 @@ int main()
     irq_install();
     terminal_initialize();
 //    init_video();
-//    timer_install();
+    timer_install();
 //    keyboard_install();
 
-//    __asm__ __volatile__ ("sti");
+    __asm__ __volatile__ ("sti");
 
     printf("Hello World!\n");
 //	setWelcomeScreen();
