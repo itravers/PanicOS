@@ -34,35 +34,28 @@ OBJS:=\
 $(KERNEL_ARCH_OBJS) \
 kernel/kernel.o \
 
-CRTI_OBJ:=$(ARCHDIR)/crti.o
-CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)
-CRTEND_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtend.o)
-CRTN_OBJ:=$(ARCHDIR)/crtn.o
-
 ALL_OUR_OBJS:=\
-$(CRTI_OBJ) \
 $(OBJS) \
-$(CRTN_OBJ) \
 
 OBJ_LINK_LIST:=\
-$(CRTI_OBJ) \
-$(CRTBEGIN_OBJ) \
 $(OBJS) \
-$(CRTEND_OBJ) \
-$(CRTN_OBJ) \
 
 all: PanicOS.kernel
 
 .PHONY: all clean install install-headers install-kernel
 
-PanicOS.kernel: $(OBJ_LINK_LIST) $(ARCHDIR)/linker.ld
-	$(CC) -T $(ARCHDIR)/linker.ld -o $@ $(CFLAGS) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
+PanicOS.kernel: $(OBJ_LINK_LIST) $(ARCHDIR)/link.ld
+	$(CC) -T $(ARCHDIR)/link.ld -o $@ $(CFLAGS) $(OBJ_LINK_LIST) $(LDFLAGS) $(LIBS)
 
 %.o: %.c
 	$(CC) -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
 %.o: %.S
-	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+#	nasm -f elf -o $(OBJS)
+#	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+
+%.o: %.asm
+	nasm -f elf -o $@ $<
 
 clean:
 	rm -f PanicOS.kernel $(OBJS) $(ALL_OUR_OBJS) *.o */*.o */*/*.o

@@ -1,35 +1,41 @@
-/**
- * Author: Isaac Assegai
- * Date  : 6/1/15
- * This is the main kernel file. This is were the bulk of
- * the future action is going to take place.
- */
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdio.h>
-#include <kernel/tty.h>
+/* bkerndev - Bran's Kernel Development Tutorial
+*  By:   Brandon F. (friesenb@gmail.com)
+*  Desc: Main.c: C code entry.
+*
+*  Notes: No warranty expressed or implied. Use at own risk. */
 
-void kernel_early(void){
-	terminal_initialize();
+unsigned char inportb (unsigned short _port)
+{
+    unsigned char rv;
+    __asm__ __volatile__ ("inb %1, %0" : "=a" (rv) : "dN" (_port));
+    return rv;
 }
 
-void kernel_main(void){
-	for(int i = 0; i < 30; i++)
-		printf("Hello %i there!\n", i);
+void outportb (unsigned short _port, unsigned char _data)
+{
+    __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
+}
 
-	//char* s = "Hello\0";
-	//printf(reverseString(s));
+int main()
+{
+//    int i;
 
+//    gdt_install();
+//    idt_install();
+//    isrs_install();
+//    irq_install();
+//    init_video();
+//    timer_install();
+//    keyboard_install();
 
+//    __asm__ __volatile__ ("sti");
 
-/*	int charsPrinted = 0;
+//    puts("Hello World!\n");
+//	setWelcomeScreen();
 
-	for(int i = 0; i < 15; i++){
-		charsPrinted += printf("%s Holy Sh*t I'm in kernel Space!!\n", 
-					  "thisisarg1");
-		printf("Printed %c Chars\n", i + 48);
-	}
-*/
-	
+//    i = 10 / 0;
+//    putch(i);
+
+    for (;;);
+	return 0;
 }
