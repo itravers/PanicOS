@@ -20,17 +20,18 @@ int main()
 {
 //    int i;
 
-//    gdt_install();
-//    idt_install();
-//    isrs_install();
-//    irq_install();
+    gdt_install();
+    idt_install();
+    isrs_install();
+    irq_install();
+    terminal_initialize();
 //    init_video();
 //    timer_install();
 //    keyboard_install();
 
 //    __asm__ __volatile__ ("sti");
 
-//    puts("Hello World!\n");
+    printf("Hello World!\n");
 //	setWelcomeScreen();
 
 //    i = 10 / 0;

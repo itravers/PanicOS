@@ -11,23 +11,20 @@
 
 size_t terminal_row;
 size_t terminal_column;
-size_t terminal_last;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
 
 void terminal_initialize(void){
 	terminal_row = 0;
 	terminal_column = 0;
-	terminal_last = VGA_HEIGHT - 1 * VGA_WIDTH + VGA_WIDTH -1;
 	terminal_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
 	terminal_buffer = VGA_MEMORY;
 	for ( size_t y = 0; y < VGA_HEIGHT; y++ ){
 		for ( size_t x = 0; x < VGA_WIDTH; x++ ){
 			const size_t index = y * VGA_WIDTH + x;
-			terminal_buffer[index] = make_vgaentry(' ', terminal_color);
+			terminal_buffer[index] = make_vgaentry('.', terminal_color);
 		}
 	}
-	terminal_buffer[24 * VGA_WIDTH + VGA_WIDTH -1] = make_vgaentry('L', terminal_color);
 }
 
 void terminal_setcolor(uint8_t color){
@@ -35,14 +32,13 @@ void terminal_setcolor(uint8_t color){
 }
 
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y){
-	size_t index = y * VGA_WIDTH + x;
-//	index = index % terminal_last;
+	const size_t index = y * VGA_WIDTH + x;
 	terminal_buffer[index] = make_vgaentry(c, color);
 }
 
 void terminal_putchar(char c){
 	if(c == '\n'){
-		terminal_column = -1;
+		terminal_column = 0;
 		terminal_row++;
 	}else{
 		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);

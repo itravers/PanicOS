@@ -1,4 +1,3 @@
-#include <system.h>
 
 /* This will keep track of how many ticks that the system
 *  has been running for */
