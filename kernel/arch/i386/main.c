@@ -1,0 +1,3 @@
+int setWelcomeScreen(){
+	printf("Welcome");
+}

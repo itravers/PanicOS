@@ -30,7 +30,7 @@ int main(){
 	for(int i = 0; i < 20; i++){
 		printf("Hello World!\n");
 	}
-//	setWelcomeScreen();
+	setWelcomeScreen();
 
     for (;;);
 	return 0;

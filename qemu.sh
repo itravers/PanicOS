@@ -6,4 +6,4 @@
 set -e
 . ./iso.sh
 
-qemu-system-$(./target-triplet-to-arch.sh $HOST) -cdrom PanicOS.iso
+qemu-system-$(./target-triplet-to-arch.sh $HOST) -kernel isodir/boot/PanicOS.kernel
