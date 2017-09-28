@@ -1,8 +1,6 @@
-/* bkerndev - Bran's Kernel Development Tutorial
-*  By:   Brandon F. (friesenb@gmail.com)
-*  Desc: Main.c: C code entry.
-*
-*  Notes: No warranty expressed or implied. Use at own risk. */
+/* PanicOS - By Isaac Assegai
+ * based on bkerndev - Bran's Kernel Development Tutorial
+ */
 
 unsigned char inportb (unsigned short _port)
 {
@@ -27,9 +25,9 @@ int main(){
 
     __asm__ __volatile__ ("sti");
 
-	for(int i = 0; i < 20; i++){
+	/*for(int i = 0; i < 20; i++){
 		printf("Hello World!\n");
-	}
+	}*/
 	setWelcomeScreen();
 
     for (;;);

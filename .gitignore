@@ -3,3 +3,4 @@
 *.kernel
 *.a
 sysroot/
+isodir/

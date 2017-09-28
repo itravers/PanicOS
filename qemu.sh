@@ -7,3 +7,4 @@ set -e
 . ./iso.sh
 
 qemu-system-$(./target-triplet-to-arch.sh $HOST) -kernel isodir/boot/PanicOS.kernel
+#qemu-system-$(./target-triplet-to-arch.sh $HOST) -iso isodir/boot/PanicOS.iso

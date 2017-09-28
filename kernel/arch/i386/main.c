@@ -1,3 +1,3 @@
 int setWelcomeScreen(){
-	printf("Welcome");
+	printf("Welcome To PanicOS");
 }
