@@ -6,6 +6,7 @@
 
 char lastChar; /* The last character sent from keyboard to shell */
 char* command; /* The command parsed */
+extern int seconds_passed; /* From timer.c, the seconds passed since system boot, uptime*/
 
 void shell_initialize(void){
   printf("shell initialize \n");
@@ -62,8 +63,11 @@ void process_command(char* command){
   //printf("\n processing commands:%s:", trimmedCommand);
 
   if(strcmp("$cls", trimmedCommand) == 0){
-    printf("Executing %s", trimmedCommand);
     terminal_clearScreen();//cls clears the screen
+  }else if(strcmp("$uptime", trimmedCommand) == 0){
+    printf("Uptime: %i Seconds", seconds_passed);//prints uptime in seconds
+  }else if(strcmp("$help", trimmedCommand) == 0){
+    printf("Possible Commands: cls, uptime, help");
   }else{
     printf("Error: Command Not Found: %s", trimmedCommand);
   }
