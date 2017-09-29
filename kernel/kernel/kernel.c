@@ -15,7 +15,7 @@ typedef struct multiboot_memory_map {
 } multiboot_memory_map_t;
 */
 
-struct multiboot_info* mbt;
+struct multiboot_info* mbt; /* Need this here so it can be accessed by mm.c */
 
 unsigned char inportb (unsigned short _port)
 {
@@ -31,7 +31,7 @@ void outportb (unsigned short _port, unsigned char _data)
 
 //int main(multiboot* multiboot, unsigned int magic){
 int main(struct multiboot_info* mbtt, unsigned int magic){
-  mbt = mbtt;
+  mbt = mbtt; //we access mbt in mm.c
 //int main(){
 	gdt_install();
 	idt_install();
