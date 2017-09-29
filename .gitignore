@@ -2,5 +2,6 @@
 *.iso
 *.kernel
 *.a
+*.swp
 sysroot/
 isodir/

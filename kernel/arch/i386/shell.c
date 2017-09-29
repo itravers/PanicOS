@@ -23,8 +23,8 @@ void shell_run(void){
 }
 
 void output_prompt(){
-  printf("\n");
-  printf("$");
+ // printf("\n");
+  printf("\n $");
 }
 
 void wait_for_command(){
@@ -40,10 +40,34 @@ void wait_for_command(){
 
 void process_command(char* command){
   if(command == 0)return;
-  printf("\n");
-  printf("processing command: %s", command);
+ // printf("\n");
+ // printf("processing commands: %s", command);
 
-  printf("stringcompare: %i ", strncmp("cls", command, 3));
+  //printf("stringcompare: %i ", strncmp("cls", command, 3));
+  //printf("\n strtrim of 'hello   ': %s ", strtrim("hello   ", 8));
+  int originalLength = strlen(command);
+  
+  char* trimmedCommand = strtrim(command, originalLength);
+  int trimmedLength = strlen(trimmedCommand);
+
+  /* debug prints
+  printf("\n");
+  printf("\n strlen: %i", originalLength);
+  printf("\n");
+  printf("\n strtrim: %s", trimmedCommand);
+  printf(":");
+  printf("\n trimlength: %i", trimmedLength);
+  */
+  
+  //printf("\n processing commands:%s:", trimmedCommand);
+
+  if(strcmp("$cls", trimmedCommand) == 0){
+    printf("Executing %s", trimmedCommand);
+    terminal_clearScreen();//cls clears the screen
+  }else{
+    printf("Error: Command Not Found: %s", trimmedCommand);
+  }
+ 
   //reset lastChar and command so we can get a new one with no interference
   lastChar = '\P';
   command = 0;

@@ -28,7 +28,7 @@ uint8_t* vgaArray_to_charArray(uint16_t* currentRowVga, int arrayLength){
 
 char* terminal_getCurrentRowChars(){
   uint16_t* currentRowVga[VGA_WIDTH];//array of vgaEntries in last terminal_row
-  uint8_t* charUINTArray; //create a char array the size of last terminal_row
+  uint8_t* charArray; //create a char array the size of last terminal_row
 
   //first we find the index of the LAST $ in the terminalBuffer
   //loop from end of terminal buffer to beginning
@@ -44,7 +44,7 @@ char* terminal_getCurrentRowChars(){
       //printf("arraylength: %i", i);  
       memcpy(currentRowVga, &terminal_buffer[i], arrayLength);
       //printf("post memcpy i=%i ", i);
-      charUINTArray = vgaArray_to_charArray(currentRowVga, arrayLength);
+      charArray = vgaArray_to_charArray(currentRowVga, arrayLength);
      // printf("\n post vgaArray_to_char i=%i ", i);
       //return charUINTArray;
       break;
@@ -64,7 +64,7 @@ char* terminal_getCurrentRowChars(){
   //printf("chararray: %s", charUINTArray); 
 
 
-  return charUINTArray;
+  return charArray;
 }
 
 /**
