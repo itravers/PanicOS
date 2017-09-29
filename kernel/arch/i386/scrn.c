@@ -1,3 +1,5 @@
+/*Legacy file, Unused, use tty.c instead */
+
 #include <string.h>
 //#include <kernel/tty.h>
 #include <stddef.h>

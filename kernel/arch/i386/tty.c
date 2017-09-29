@@ -14,10 +14,31 @@ size_t terminal_column;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
 
-//uint16_t* terminal_getBuffer(){
-//  return terminal_buffer;
-//}
+/**
+ * Moves the cursor to the correct position as given by
+ * terminal_row, and terminal_column
+ */
+void terminal_moveCursor(void){
+  unsigned temp;
 
+  /* Find the index in memory */
+  temp = terminal_row * VGA_WIDTH + terminal_column;
+
+  /* Send a command to indicies 14 and 15 in the
+   * CRT Control Register of the VGA controller
+   * These are the high and low butes of the index
+   * That show where the harder cursor is to be 
+   * blinking */
+  outportb(0x3D4, 14);
+  outportb(0x3D5, temp >> 8);
+  outportb(0x3D4, 15);
+  outportb(0x3D5, temp);
+}
+
+/**
+ * Convert an array of VGA entries to a corresponding array of chars
+ * Removes the vga color info so all we have left are the chars
+ */
 uint8_t* vgaArray_to_charArray(uint16_t* currentRowVga, int arrayLength){
   uint8_t charArray[arrayLength];
   for(int n = 0; n < arrayLength; n++){
@@ -92,6 +113,7 @@ void terminal_initialize(void){
 			terminal_buffer[index] = make_vgaentry(' ', terminal_color);
 		}
 	}
+  terminal_moveCursor();
 }
 
 void terminal_setcolor(uint8_t color){
@@ -144,11 +166,7 @@ void terminal_newLine(){
 
 void terminal_putchar(char c){
 	if(c == '\n'){
-//		terminal_column = 0;
-//		terminal_row++;
 	  terminal_newLine();
-  //}else if(c == 0x38){
-   // terminal_clearScreen();
   }else{
 		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
 	}
@@ -158,6 +176,7 @@ void terminal_putchar(char c){
     terminal_row++;
 	}
 	scroll(); //scroll if needed
+  terminal_moveCursor();
 }
 
 void terminal_write(const char* data, size_t size){
