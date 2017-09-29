@@ -13,6 +13,24 @@ static void print(const char* data, size_t data_length){
 		putchar((int) ((const unsigned char*) data)[i]);
 }
 
+char *convert(unsigned int num, int base) 
+{ 
+    static char Representation[]= "0123456789ABCDEF";
+    static char buffer[50]; 
+    char *ptr; 
+
+    ptr = &buffer[49]; 
+    *ptr = '\0'; 
+
+    do 
+    { 
+        *--ptr = Representation[num%base]; 
+        num /= base; 
+    }while(num != 0); 
+
+    return(ptr); 
+}
+
 /**
  * Allows us to add variables in our print output.
  * If we add a %s specifier to our string, and add a 2nd string argument
@@ -63,7 +81,11 @@ int printf(const char* restrict format, ...){
 			format++;
 			const char* s = va_arg(parameters, const char*);
 			print(s, strlen(s));
-		}
+		}else if(*format == 'x'){
+      format++;
+      const char* s = convert(va_arg(parameters, const char*), 16);
+      print(s, strlen(s));
+    }
 		else{ /* We don't recognize this specifier. */
 			goto incomprehensible_conversion;
 		}

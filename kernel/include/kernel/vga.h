@@ -38,6 +38,12 @@ static inline uint16_t make_vgaentry(char c, uint8_t color){
 	return c16 | color16 << 8;
 }
 
+static inline uint8_t make_charFromVgaEntry(uint16_t vgaEntry){
+  uint8_t character = vgaEntry & 0x00FF;
+ // putchar(character);
+  return character;
+}
+
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 static uint16_t* const VGA_MEMORY = (uint16_t*) 0xB8000;

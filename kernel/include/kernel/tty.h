@@ -12,5 +12,9 @@ void terminal_initialize(void);
 void terminal_putchar(char c);
 void terminal_write(const char* data, size_t size);
 void terminal_writestring(const char* data);
+size_t terminal_getRow();
+size_t terminal_getColumn();
+void terminal_setRow(size_t row);
+void teminal_setColumn(size_t column);
 
 #endif

@@ -4,7 +4,8 @@
 *  though I set it's array index to 0. You can change that to
 *  whatever you want using a macro, if you wish! */
 
-#include <kernel/tty.h>
+//#include <kernel/tty.h>
+#include <kernel/shell.h>
 unsigned char kbdus[128] =
 {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8',	/* 9 */
@@ -18,7 +19,7 @@ unsigned char kbdus[128] =
  '\\', 'z', 'x', 'c', 'v', 'b', 'n',			/* 49 */
   'm', ',', '.', '/',   0,				/* Right shift */
   '*',
-    0,	/* Alt */
+   0X38,	/* Alt */
   ' ',	/* Space bar */
     0,	/* Caps lock */
     0,	/* 59 - F1 key ... > */
@@ -74,7 +75,8 @@ void keyboard_handler(struct regs *r)
         *  to the above layout to correspond to 'shift' being
         *  held. If shift is held using the larger lookup table,
         *  you would add 128 to the scancode when you look for it */
-        terminal_putchar(kbdus[scancode]);
+        //terminal_putchar(kbdus[scancode]);
+        shell_putchar(kbdus[scancode]);//send the character pressed to the shell
     }
 }
 

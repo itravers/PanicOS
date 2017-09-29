@@ -14,6 +14,73 @@ size_t terminal_column;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
 
+//uint16_t* terminal_getBuffer(){
+//  return terminal_buffer;
+//}
+
+uint8_t* vgaArray_to_charArray(uint16_t* currentRowVga, int arrayLength){
+  uint8_t charArray[arrayLength];
+  for(int n = 0; n < arrayLength; n++){
+    charArray[n] = make_charFromVgaEntry(currentRowVga[n]);
+  }
+  return charArray;
+}
+
+char* terminal_getCurrentRowChars(){
+  uint16_t* currentRowVga[VGA_WIDTH];//array of vgaEntries in last terminal_row
+  uint8_t* charUINTArray; //create a char array the size of last terminal_row
+
+  //first we find the index of the LAST $ in the terminalBuffer
+  //loop from end of terminal buffer to beginning
+  int j = terminal_row*VGA_WIDTH+terminal_column;
+  //printf("\n preloop terminal_row = %i ", terminal_row);
+  char currentChar;
+  for(int i = j; i >=0; i--){
+    //printf("%i ",i);
+    currentChar = make_charFromVgaEntry(terminal_buffer[i]);
+    if(currentChar == '$'){
+      //printf(" i=%i ", i);
+      int arrayLength = VGA_WIDTH - (i%80);
+      //printf("arraylength: %i", i);  
+      memcpy(currentRowVga, &terminal_buffer[i], arrayLength);
+      //printf("post memcpy i=%i ", i);
+      charUINTArray = vgaArray_to_charArray(currentRowVga, arrayLength);
+     // printf("\n post vgaArray_to_char i=%i ", i);
+      //return charUINTArray;
+      break;
+    }
+
+    //printf("\n post if i %i ", i);
+    j = i;
+  }
+
+  //printf("currentChar %x", currentChar);
+
+  //printf("post for");
+
+  //printf("j = %i", j);
+  //printf("\n postloop terminal_row: %i ", terminal_row);
+  //first we test by printing the char array
+  //printf("chararray: %s", charUINTArray); 
+
+
+  return charUINTArray;
+}
+
+/**
+ * Returns the current terminal_row of the tty
+ */
+size_t terminal_getRow(){
+  return terminal_row;
+}
+
+/**
+ * Returns the current terminal_column of the tty
+ */
+size_t terminal_getColumn(){
+  return terminal_column;
+}
+
 void terminal_initialize(void){
 	terminal_row = 0;
 	terminal_column = 0;
@@ -34,6 +101,13 @@ void terminal_setcolor(uint8_t color){
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y){
 	const size_t index = y * VGA_WIDTH + x;
 	terminal_buffer[index] = make_vgaentry(c, color);
+}
+
+/**
+ * Clears the terminals screen
+ */
+void terminal_clearScreen(){
+  terminal_initialize();
 }
 
 void scroll(void){
@@ -63,17 +137,25 @@ void scroll(void){
     }
 }
 
+void terminal_newLine(){
+  terminal_column = 0;
+  terminal_row++;
+}
 
 void terminal_putchar(char c){
 	if(c == '\n'){
-		terminal_column = 0;
-		terminal_row++;
-	}else{
+//		terminal_column = 0;
+//		terminal_row++;
+	  terminal_newLine();
+  //}else if(c == 0x38){
+   // terminal_clearScreen();
+  }else{
 		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
 	}
 	
 	if(++terminal_column == VGA_WIDTH){
 		terminal_column = 0;
+    terminal_row++;
 	}
 	scroll(); //scroll if needed
 }
