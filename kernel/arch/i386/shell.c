@@ -14,7 +14,7 @@ void shell_initialize(void){
 }
 
 void shell_run(void){
-  printf("Running Shell");
+  //printf("Running Shell");
   while(1){//the shell always runs
     output_prompt();
     wait_for_command();
@@ -42,8 +42,10 @@ void process_command(char* command){
   if(command == 0)return;
   printf("\n");
   printf("processing command: %s", command);
-  lastChar = '\P';
 
+  printf("stringcompare: %i ", strncmp("cls", command, 3));
+  //reset lastChar and command so we can get a new one with no interference
+  lastChar = '\P';
   command = 0;
 }
 

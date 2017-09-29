@@ -21,6 +21,7 @@ void* memset(void*, int, size_t);
 size_t strlen(const char*);
 char* reverseString(char*);
 char* itoa(int, char*, int);
+int strncmp(const char*, const char*, size_t);
 
 #ifdef __cplusplus
 }
