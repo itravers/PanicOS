@@ -15,6 +15,8 @@ typedef struct multiboot_memory_map {
 } multiboot_memory_map_t;
 */
 
+struct multiboot_info* mbt;
+
 unsigned char inportb (unsigned short _port)
 {
     unsigned char rv;
@@ -28,7 +30,8 @@ void outportb (unsigned short _port, unsigned char _data)
 }
 
 //int main(multiboot* multiboot, unsigned int magic){
-int main(struct multiboot_info* mbt, unsigned int magic){
+int main(struct multiboot_info* mbtt, unsigned int magic){
+  mbt = mbtt;
 //int main(){
 	gdt_install();
 	idt_install();
@@ -37,12 +40,16 @@ int main(struct multiboot_info* mbt, unsigned int magic){
   terminal_initialize();
   timer_install();
   keyboard_install();
+  mm_initialize();
   __asm__ __volatile__ ("sti");
 
 	/*for(int i = 0; i < 20; i++){
 		printf("Hello World!\n");
 	}*/
 //	setWelcomeScreen();
+
+/*
+  int* memory;
 
   //memory testing
   printf("\nmbt->flags: 0x%x", mbt->flags);
@@ -56,22 +63,28 @@ int main(struct multiboot_info* mbt, unsigned int magic){
     printf("\nmmap->addr: 0x%x ", mmap->addr);
     //printf("\nmmap->size: 0x%x", mmap->size);
     printf("\nmmap->len: 0x%x", mmap->len);
-    printf("\nmmap->type: 0d%i", mmap->type);
+    printf("\nmmap->type: 0d%i \n", mmap->type);
+
+    if(mmap->type == 1 && mmap->len > 0x1000000){
+      memory = (int*)mmap->addr;
+    }
+
     mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
     
   }
-
+  printf("\nMemory at: 0x%x", memory);
   printf("\nmbt->mmap_addr: 0x%x ", mbt->mmap_addr);
   printf("\nmmap->size: 0x%x ", mmap->size);
   printf("\nmmap->len: 0x%x ", mmap->len);
-
+*/
+/*
   short* a = (short*) 0x100000;
   *a = 0xAAAA ;
   a++;
   *a = 0xBBBB;
   a++;
   *a = 0xCCCC;
-
+*/
   main_initialize();
 
     for (;;);
