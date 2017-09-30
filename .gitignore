@@ -3,5 +3,6 @@
 *.kernel
 *.a
 *.swp
+*.swo
 sysroot/
 isodir/
