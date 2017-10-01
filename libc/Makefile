@@ -37,6 +37,7 @@ stdio/putchar.o \
 stdio/puts.o \
 stdlib/abort.o \
 stdlib/round.o \
+stdlib/inout.o \
 string/memcmp.o \
 string/memcpy.o \
 string/memmove.o \
