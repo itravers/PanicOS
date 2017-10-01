@@ -21,6 +21,9 @@ extern void code;
 
 /* memLoc is a pointer to the beginning of physical memory as determined by multiboot */
 void* memLoc; 
+
+/* Used by kmalloc to keep watermark track of physical allocations. 
+ * Can't seem to declare this in kheap.c, get a const error */
 u32int placement_address;
 
 /* memAmt is the amount of bytes in memory as determined by multiboot */
