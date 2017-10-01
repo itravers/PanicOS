@@ -4,7 +4,9 @@
 #ifndef PAGING_H
 #define PAGING_H
 
+#include "regs.h"
 #include <stddef.h>
+#include <stdlib.h>
 //#include "isr.h"
 
 typedef struct page

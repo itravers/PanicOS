@@ -5,6 +5,7 @@
  */
 
 #include <kernel/multiboot.h>
+//#include <kernel/paging.h>
 
 /* Structure passed in by start.asm. Used to access bootloader info
    We use this in mm.c to find the location of usable memory. */
@@ -42,7 +43,9 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   timer_install();
   keyboard_install();
   mm_initialize();
-  kheap_test(); 
+//  kheap_test(); 
+  //initialize_paging();
+  //printf("\nhello paging world!");
   __asm__ __volatile__ ("sti");  //Enable Interrupts
   main_initialize();
     for (;;);

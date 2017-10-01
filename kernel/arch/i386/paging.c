@@ -1,6 +1,6 @@
 // paging.c -- Defines the interface for and structures relating to paging.
 //             Written for JamesM's kernel development tutorials.
-#include "regs.h"
+//#include "regs.h"
 #include <kernel/paging.h>
 #include <kernel/kheap.h>
 
