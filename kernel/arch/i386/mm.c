@@ -12,6 +12,10 @@
 /* The multiboot_info passed into kernel main */
 extern struct multiboot_info* mbt;
 
+/* &end is defined in linker.ld, it is the end of the kernel */
+extern void end;
+extern void code;
+
 /* memLoc is a pointer to the beginning of physical memory as determined by multiboot */
 void* memLoc; 
 
@@ -49,15 +53,27 @@ void mm_initialize(void){
     mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
   }
 
+  /* Only used to display the start location of Ram, then promptly forgotten */
+  void* startOfRam = memLoc;
+
   /* Calculate a pointer to the end of physical memory. */
   memEndLoc = memLoc + memAmt;
-  printf("\nMemory Found At Location: 0x%x", memLoc);
-  printf("\nMemory Amount Located   : 0x%x", memAmt);
-  printf("\nEnd of Phyisical Memeory: 0x%x", memEndLoc);
 
-  setupHeader(0x111010);
+  /* Add the size of the kernel to memLoc at the nearest 4kb boundry */
+  memLoc += roundUp(&end - &code, 4096);  
+  
+  printf("\nEnd of Kernel           : 0x%x", &end);
+  printf("\nStart of Kernel         : 0x%x", &code);
+  printf("\nSize of Kernel          : 0x%x", (&end - &code));
+
+  printf("\nMemory Found At Location: 0x%x", startOfRam);
+  printf("\nMemory Amount Located   : 0x%x", memAmt);
+  printf("\nEnd of Phyisical Memory : 0x%x", memEndLoc);
+  printf("\nUsable Memeory Starts At: 0x%x", memLoc);
+
+  setupHeader(memLoc);
   //setupHeader(0x101010);  
-  //void* someMemory = pAlloc(50);
+  void* someMemory = pAlloc(50);
   //printf("\nRETURNED"); 
  //if(someMemory != NULL)printf("\nUsing someMemory: 0x%x", someMemory);
   //pAlloc(100);
