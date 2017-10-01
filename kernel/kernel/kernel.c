@@ -41,7 +41,8 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   terminal_initialize();
   timer_install();
   keyboard_install();
-  mm_initialize(); 
+  mm_initialize();
+  kheap_test(); 
   __asm__ __volatile__ ("sti");  //Enable Interrupts
   main_initialize();
     for (;;);

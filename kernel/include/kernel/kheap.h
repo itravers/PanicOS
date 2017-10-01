@@ -10,6 +10,8 @@
 
 #include <stdlib.h> //for u32int typedefs, etc
 
+void kheap_test(void);
+
 /**
    Allocate a chunk of memory, sz in size. If align == 1,
    the chunk must be page-aligned. If phys != 0, the physical

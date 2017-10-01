@@ -21,6 +21,7 @@ extern void code;
 
 /* memLoc is a pointer to the beginning of physical memory as determined by multiboot */
 void* memLoc; 
+u32int placement_address;
 
 /* memAmt is the amount of bytes in memory as determined by multiboot */
 int memAmt;
@@ -73,4 +74,5 @@ void mm_initialize(void){
   printf("\nMemory Amount Located   : 0x%x", memAmt);
   printf("\nEnd of Phyisical Memory : 0x%x", memEndLoc);
   printf("\nUsable Memeory Starts At: 0x%x", memLoc);
+  placement_address = memLoc;
 }
