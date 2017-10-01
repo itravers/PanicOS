@@ -5,6 +5,7 @@
  */
 
 #include <kernel/multiboot.h>
+#include <stdlib.h>
 //#include <kernel/paging.h>
 
 /* Structure passed in by start.asm. Used to access bootloader info
@@ -44,9 +45,13 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   keyboard_install();
   mm_initialize();
 //  kheap_test(); 
-  //initialize_paging();
-  //printf("\nhello paging world!");
-  __asm__ __volatile__ ("sti");  //Enable Interrupts
+  initialise_paging();
+  printf("\nhello paging world!");
+  u32int *ptr = (u32int*)0xA0000000;
+   u32int do_page_fault = *ptr;
+  printf("\n0x%x", do_page_fault);
+
+   __asm__ __volatile__ ("sti");  //Enable Interrupts
   main_initialize();
     for (;;);
 	return 0;

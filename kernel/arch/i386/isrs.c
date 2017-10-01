@@ -110,7 +110,7 @@ char *exception_messages[] =
     "Segment Not Present",
     "Stack Fault",
     "General Protection Fault",
-    "Page Fault",
+    "Page Fault!",
     "Unknown Interrupt",
 
     "Coprocessor Fault",
@@ -139,11 +139,18 @@ char *exception_messages[] =
 *  serviced as a 'locking' mechanism to prevent an IRQ from
 *  happening and messing up kernel data structures */
 void fault_handler(struct regs *r)
-{
-    if (r->int_no < 32)
+{   
+    if(r->int_no == 14){
+      page_fault(r);
+    }
+    
+     if (r->int_no < 32)
     {
-        puts("\n Exception. System Halted!\n");
+        //printf("%i", r->int_no);
+        puts("\nException. System Halted!");
         puts(exception_messages[r->int_no]);
+            
+
         for (;;);
     }
 }
