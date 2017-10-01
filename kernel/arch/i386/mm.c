@@ -55,7 +55,7 @@ void mm_initialize(void){
   printf("\nMemory Amount Located   : 0x%x", memAmt);
   printf("\nEnd of Phyisical Memeory: 0x%x", memEndLoc);
 
-  setupHeader(0x101010);
+  setupHeader(0x111010);
   //setupHeader(0x101010);  
   //void* someMemory = pAlloc(50);
   //printf("\nRETURNED"); 
