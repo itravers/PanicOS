@@ -15,6 +15,9 @@ extern "C" {
 __attribute__((__noreturn__))
 void abort(void);
 
+/** Rounds an unsigned int up to the nearest multiple of a number*/
+unsigned int roundUp(unsigned int, unsigned int);
+
 #ifdef __cplusplus
 }
 #endif
