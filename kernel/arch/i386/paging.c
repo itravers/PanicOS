@@ -135,8 +135,8 @@ void initialise_paging()
         i += 0x1000;
     }
     // Before we enable paging, we must register our page fault handler.
-    //register_interrupt_handler(14, page_fault);
-    irq_install_handler(14, page_fault);    
+    register_interrupt_handler(14, page_fault);
+    //irq_install_handler(14, page_fault);    
 
     // Now, enable paging!
     switch_page_directory(kernel_directory);

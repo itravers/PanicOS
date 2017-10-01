@@ -5,6 +5,8 @@
 *  Notes: No warranty expressed or implied. Use at own risk. */
 #include "regs.h"
 
+void* interrupt_handlers[256];
+
 /* These are function prototypes for all of the exception
 *  handlers: The first 32 entries in the IDT are reserved
 *  by Intel, and are designed to service exceptions! */
@@ -132,6 +134,10 @@ char *exception_messages[] =
     "Reserved"
 };
 
+void register_interrupt_handler(int n, void(*handler)(struct regs *r)){
+  interrupt_handlers[n] = handler;
+}
+
 /* All of our Exception handling Interrupt Service Routines will
 *  point to this function. This will tell us what exception has
 *  happened! Right now, we simply halt the system by hitting an
@@ -139,10 +145,14 @@ char *exception_messages[] =
 *  serviced as a 'locking' mechanism to prevent an IRQ from
 *  happening and messing up kernel data structures */
 void fault_handler(struct regs *r)
-{   
-    if(r->int_no == 14){
-      page_fault(r);
-    }
+{  
+  void (*handler)(struct regs *r);
+ 
+  if(interrupt_handlers[r->int_no] != 0){
+   // printf("processing interrupts");
+   handler = interrupt_handlers[r->int_no];
+   handler(r);
+  }
     
      if (r->int_no < 32)
     {
