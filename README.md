@@ -109,4 +109,26 @@ qemu is the virtual machine that emulates a x86 system that we will run the Pani
 sudo apt-get install qemu-system-x86
 ```
 
+Building PanicOS
+--------------
+PanicOS includes shell scripts to make building easy
+just invoke the ./build.sh shell script
+```shell
+./build.sh
+```
+to cleanup the build environment just invoke
+```shell
+./clean.sh
+```
+
+Booting PanicOS
+PanicOS includes shell scripts to boot the qemu VM, just invoke
+```shell
+./qemu.sh
+```
+
+Issues
+--------------
+* There is apparently a difference between the build tools originally used for Panic OS 
+  and the newest version. When using binutils-2.29.1 with gcc-7.2.0 the shell goes into an infinite loop
 Version 0.0.1
