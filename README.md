@@ -29,8 +29,14 @@ It is derived from the following tutorials
    The first version of PanicOS's virtual filesystem and its initial
    ramdisks is is derived from JamesM's kernel development tutorials.
 
-REquirements of PanicOS
+Requirements of PanicOS
+-----------------------
+PanicOS is designed to be run on x86 cpu's. 
+In order to run and compile PanicOS the following is
+required of the host operating system.
 
+* Linux OS
+* Assembler for i686-elf
 * i686-elf-gcc cross compiler
 
 binutils  
