@@ -1,5 +1,6 @@
 PanicOS - A Hobby Operating System
 ==================================
+Version 0.0.2
 
 Introduction
 ------------
@@ -131,4 +132,3 @@ Issues
 --------------
 * There is apparently a difference between the build tools originally used for Panic OS 
   and the newest version. When using binutils-2.29.1 with gcc-7.2.0 the shell goes into an infinite loop
-Version 0.0.1
