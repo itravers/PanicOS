@@ -49,8 +49,8 @@ export TARGET=i686-elf
 export PATH="$PREFIX/bin:$PATH"
 ```
 
-binutils  
-binutils includes the assembler required to compile PanicOS
+##### binutils  
+binutils includes the linker required to cross-compile PanicOS
 ```shell
 mkdir $HOME/src
 cd $HOME/src
@@ -62,7 +62,11 @@ cd build-binutils
 make
 ```
 
-gcc
+##### nasm
+sudo apt-get install nasm
+
+##### gcc
+gcc includes the c compiler required to cross-compile PanicOS
 
 cd $HOME/src
 wget http://www.netgull.com/gcc/releases/gcc-7.2.0/gcc-7.2.0.tar.gz
@@ -78,7 +82,16 @@ mkdir build-gcc
 cd build-gcc
 ../gcc-7.2.0/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers
 make all-gcc
+make all-target-libgcc
+make install-gcc
+make install-target-libgcc
 
+To use your new compiler simply by invoking $TARGET-gcc, add $HOME/opt/cross/bin to your $PATH by typing:
+export PATH="$HOME/opt/cross/bin:$PATH"
+
+At this point the ./build script works, but grub-mkrescue doesn't because xorriso is to old
+
+sudo apt-get install xorriso
   
 
 Version 0.0.1
