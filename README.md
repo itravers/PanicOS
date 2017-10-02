@@ -36,23 +36,31 @@ In order to run and compile PanicOS the following is
 required of the host operating system.
 
 * Linux OS
-* Assembler for i686-elf
+* i686-elf-as cross assembler
 * i686-elf-gcc cross compiler
+* qemu Virtual Machine
 
-binutils  
+### Installing Requirements
 
+Configure PATH variables in preparation for compiling binutils and gcc
+```shell
 export PREFIX="$HOME/opt/cross"
 export TARGET=i686-elf
 export PATH="$PREFIX/bin:$PATH"
+```
+
+binutils  
+binutils includes the assembler required to compile PanicOS
+```shell
 mkdir $HOME/src
 cd $HOME/src
-
-  wget ftp://sourceware.org/pub/binutils/snapshots/binutils-2.29.1.tar.gz
-  tar -xvf binutils-2.29.1.tar.gz
+wget ftp://sourceware.org/pub/binutils/snapshots/binutils-2.29.1.tar.gz
+tar -xvf binutils-2.29.1.tar.gz
 mkdir build-binutils
 cd build-binutils
 ../binutils-2.29.1/configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
 make
+```
 
 gcc
 
