@@ -38,6 +38,7 @@ stdio/puts.o \
 stdlib/abort.o \
 stdlib/round.o \
 stdlib/inout.o \
+stdlib/ordered_array.o \
 string/memcmp.o \
 string/memcpy.o \
 string/memmove.o \

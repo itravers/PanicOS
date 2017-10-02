@@ -46,11 +46,13 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   mm_initialize();
 //  kheap_test(); 
   initialise_paging();
+  
+/*//page fault testing
   printf("\nhello paging world!");
   u32int *ptr = (u32int*)0xA0000000;
    u32int do_page_fault = *ptr;
   printf("\n0x%x", do_page_fault);
-
+*/
    __asm__ __volatile__ ("sti");  //Enable Interrupts
   main_initialize();
     for (;;);
