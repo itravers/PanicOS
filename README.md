@@ -63,35 +63,50 @@ make
 ```
 
 ##### nasm
+nasm is the assembler we use to assemble PanicOS
+```shell
 sudo apt-get install nasm
+```
 
 ##### gcc
 gcc includes the c compiler required to cross-compile PanicOS
 
+```shell
 cd $HOME/src
 wget http://www.netgull.com/gcc/releases/gcc-7.2.0/gcc-7.2.0.tar.gz
 tar -xvf gcc-7.2.0.tar.gz
 
-//download gmp mpfr and mpc
+download gmp mpfr and mpc
 cd gcc-7.2.0
 contrib/download_prerequisites
 
 cd $HOME/src
-
 mkdir build-gcc
 cd build-gcc
 ../gcc-7.2.0/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers
+
 make all-gcc
 make all-target-libgcc
 make install-gcc
 make install-target-libgcc
+```
 
 To use your new compiler simply by invoking $TARGET-gcc, add $HOME/opt/cross/bin to your $PATH by typing:
+```shell
 export PATH="$HOME/opt/cross/bin:$PATH"
-
+```
 At this point the ./build script works, but grub-mkrescue doesn't because xorriso is to old
 
+##### xorriso
+xorriso is used by grub-mkrescue to generate an iso of the PanicOS kernel
+```shell
 sudo apt-get install xorriso
-  
+```
+
+##### qemu
+qemu is the virtual machine that emulates a x86 system that we will run the PanicOS kernel in
+```shell
+sudo apt-get install qemu-system-x86
+```
 
 Version 0.0.1
