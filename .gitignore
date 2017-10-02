@@ -4,5 +4,7 @@
 *.a
 *.swp
 *.swo
+*.c~
+*.h~
 sysroot/
 isodir/

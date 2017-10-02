@@ -45,8 +45,23 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   keyboard_install();
   mm_initialize();
 //  kheap_test(); 
-  initialise_paging();
-  
+
+//kheap testing
+  u32int a = kmalloc(8);
+initialise_paging();
+u32int b = kmalloc(8);
+u32int c = kmalloc(8);
+printf("\na: 0x%x", a);
+printf("\nb: 0x%x", b);
+printf("\nc: 0x%x", c);
+
+kfree(c);
+kfree(b);
+u32int d = kmalloc(12);
+printf("\nd: 0x%x", d);
+ 
+
+
 /*//page fault testing
   printf("\nhello paging world!");
   u32int *ptr = (u32int*)0xA0000000;

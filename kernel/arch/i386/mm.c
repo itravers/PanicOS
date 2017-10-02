@@ -75,7 +75,7 @@ void mm_initialize(void){
 
   printf("\nMemory Found At Location: 0x%x", startOfRam);
   printf("\nMemory Amount Located   : 0x%x", memAmt);
-  printf("\nEnd of Phyisical Memory : 0x%x", memEndLoc);
+  printf("\nEnd of Physical Memory : 0x%x", memEndLoc);
   printf("\nUsable Memeory Starts At: 0x%x", memLoc);
   placement_address = memLoc;
 }
