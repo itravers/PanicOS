@@ -9,8 +9,8 @@ It is derived from the following tutorials
 
 1. bkerndev - Bran's Kernel Development Tutorial (http://www.osdever.net/tutorials/view/brans-kernel-development-tutorial)
 
-   The first steps to realize eduOS based on Bran's Kernel Development
-   Tutorial (http://www.osdever.net/tutorials/view/brans-kernel-development-tutorial).
+   The first steps to realize PanicOS based on Bran's Kernel Development
+   Tutorial.
    In particular, the initialization of GDT, IDT and the interrupt handlers are derived
    from this tutorial.
 
@@ -26,11 +26,11 @@ It is derived from the following tutorials
    your own libc (Standard C Library).
 
 4. JamesM's kernel development tutorials (http://www.jamesmolloy.co.uk/tutorial_html/index.html)
-   The first version of eduOS's virtual filesystem and its initial
-   ramdiks is is derived from JamesM's kernel development tutorials.
-   (http://www.jamesmolloy.co.uk/tutorial_html/index.html)
+   The first version of PanicOS's virtual filesystem and its initial
+   ramdisks is is derived from JamesM's kernel development tutorials.
 
 REquirements of PanicOS
+
 * i686-elf-gcc cross compiler
 
 binutils  
