@@ -9,9 +9,16 @@
 #include <string.h>
 #include <kernel/vga.h>
 
+/* The current terminal row the cursor is on. */
 size_t terminal_row;
+
+/* The current terminal column the cursor is on. */
 size_t terminal_column;
+
+/* The current color (background|foreground) the terminal is. */
 uint8_t terminal_color;
+
+/* The address where the terminal is located. */
 uint16_t* terminal_buffer;
 
 /**
@@ -47,6 +54,7 @@ uint8_t* vgaArray_to_charArray(uint16_t* currentRowVga, int arrayLength){
   return charArray;
 }
 
+/* Returns a char array of all the character on the terminals current row. */
 char* terminal_getCurrentRowChars(){
   uint16_t* currentRowVga[VGA_WIDTH];//array of vgaEntries in last terminal_row
   uint8_t* charArray; //create a char array the size of last terminal_row
@@ -54,37 +62,18 @@ char* terminal_getCurrentRowChars(){
   //first we find the index of the LAST $ in the terminalBuffer
   //loop from end of terminal buffer to beginning
   int j = terminal_row*VGA_WIDTH+terminal_column;
-  //printf("\n preloop terminal_row = %i ", terminal_row);
   char currentChar;
+  
   for(int i = j; i >=0; i--){
-    //printf("%i ",i);
     currentChar = make_charFromVgaEntry(terminal_buffer[i]);
     if(currentChar == '$'){
-      //printf(" i=%i ", i);
       int arrayLength = VGA_WIDTH - (i%80);
-      //printf("arraylength: %i", i);  
       memcpy(currentRowVga, &terminal_buffer[i], arrayLength);
-      //printf("post memcpy i=%i ", i);
       charArray = vgaArray_to_charArray(currentRowVga, arrayLength);
-     // printf("\n post vgaArray_to_char i=%i ", i);
-      //return charUINTArray;
       break;
     }
-
-    //printf("\n post if i %i ", i);
     j = i;
   }
-
-  //printf("currentChar %x", currentChar);
-
-  //printf("post for");
-
-  //printf("j = %i", j);
-  //printf("\n postloop terminal_row: %i ", terminal_row);
-  //first we test by printing the char array
-  //printf("chararray: %s", charUINTArray); 
-
-
   return charArray;
 }
 
@@ -102,6 +91,10 @@ size_t terminal_getColumn(){
   return terminal_column;
 }
 
+/* Initialzes the kernel
+ * Sets cursor location, terminal color,
+ * Sets where the terminal_biffer is located
+ * blanks out all the character in the terminal. */
 void terminal_initialize(void){
 	terminal_row = 0;
 	terminal_column = 0;
@@ -116,10 +109,12 @@ void terminal_initialize(void){
   terminal_moveCursor();
 }
 
+/* Sets the terminal color. */
 void terminal_setcolor(uint8_t color){
 	terminal_color = color;
 }
 
+/* Puts a character of a given color, at a specific location in the terminal. */
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y){
 	const size_t index = y * VGA_WIDTH + x;
 	terminal_buffer[index] = make_vgaentry(c, color);
@@ -132,38 +127,39 @@ void terminal_clearScreen(){
   terminal_initialize();
 }
 
+/* Scrolls the terminal based on where the cursor is. */
 void scroll(void){
-    uint16_t blank, temp;
+  uint16_t blank, temp;
 
-    /* A blank is defined as a space... we need to give it
-    *  backcolor too */
-    //blank = 0x20 | (attrib << 8);
+  /* A blank is defined as a space... we need to give it
+     backcolor too */
 	terminal_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
 	blank = make_vgaentry('.', terminal_color);
 
-    /* Row 25 is the end, this means we need to scroll up */
-    if(terminal_row >= 25)
-    {
-        /* Move the current text chunk that makes up the screen
-        *  back in the buffer by a line */
-        temp = terminal_row - 25 + 1;
-        memcpy (VGA_MEMORY, VGA_MEMORY + temp * 80, (25 - temp) * 80 * 2);
+  /* Row 25 is the end, this means we need to scroll up */
+  if(terminal_row >= 25){
+    /* Move the current text chunk that makes up the screen
+       back in the buffer by a line */
+    temp = terminal_row - 25 + 1;
+    memcpy (VGA_MEMORY, VGA_MEMORY + temp * 80, (25 - temp) * 80 * 2);
 
-        /* Finally, we set the chunk of memory that occupies
-        *  the last line of text to our 'blank' character */
-        //memset (VGA_MEMORY + (25 - temp) * 80, blank, 80);
-	for(int i = 0; i < 80; i++)
-		terminal_putentryat(' ', terminal_color, i, 24);
-
-	terminal_row = 25 - 1;
+    /* Finally, we set the chunk of memory that occupies
+       the last line of text to our 'blank' character */
+	  for(int i = 0; i < 80; i++){
+		  terminal_putentryat(' ', terminal_color, i, 24);
     }
+	  terminal_row = 25 - 1;
+   }
 }
 
+/* Sets terminal cursor location to a new line. */
 void terminal_newLine(){
   terminal_column = 0;
   terminal_row++;
 }
 
+/* Adds a character to the next location in the terminal
+ * or adds a new line, if newline character was passed in. */
 void terminal_putchar(char c){
 	if(c == '\n'){
 	  terminal_newLine();
@@ -179,11 +175,13 @@ void terminal_putchar(char c){
   terminal_moveCursor();
 }
 
+/* Writes a char array of a given size to the terminal. */
 void terminal_write(const char* data, size_t size){
 	for ( size_t i = 0; i < size; i++ )
 		terminal_putchar(data[i]);
 }
 
+/* Writes a string to the terminal. */
 void terminal_writestring(const char* data){
 	terminal_write(data, strlen(data));
 }
