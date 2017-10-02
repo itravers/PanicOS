@@ -49,14 +49,14 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
 //kheap testing
   u32int a = kmalloc(8);
 initialise_paging();
-u32int b = kmalloc(8);
-u32int c = kmalloc(8);
+u32int b = kmalloc(0x100000);
+u32int c = kmalloc(32);
 printf("\na: 0x%x", a);
 printf("\nb: 0x%x", b);
 printf("\nc: 0x%x", c);
 
 kfree(c);
-kfree(b);
+//kfree(b);
 u32int d = kmalloc(12);
 printf("\nd: 0x%x", d);
  

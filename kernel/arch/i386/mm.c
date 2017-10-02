@@ -22,12 +22,15 @@ extern void code;
 /* memLoc is a pointer to the beginning of physical memory as determined by multiboot */
 void* memLoc; 
 
-/* Used by kmalloc to keep watermark track of physical allocations. 
+/* The address where the kheap will be initialized 
  * Can't seem to declare this in kheap.c, get a const error */
 u32int placement_address;
 
 /* memAmt is the amount of bytes in memory as determined by multiboot */
 int memAmt;
+
+/* The amound of memory usable for allocation. */
+int memUsable;
 
 /* memEndLoc is a pointer to the end of memory, as calculated in mm_initialze (memLoc+memAmt)*/
 void* memEndLoc;
@@ -68,7 +71,10 @@ void mm_initialize(void){
 
   /* Add the size of the kernel to memLoc at the nearest 4kb boundry */
   memLoc += roundUp(&end - &code, 4096);  
-  
+
+  /* Calculate the amount of memory that is usable for heap allocation after kernel*/
+  memUsable = memEndLoc - memLoc;
+
   printf("\nEnd of Kernel           : 0x%x", &end);
   printf("\nStart of Kernel         : 0x%x", &code);
   printf("\nSize of Kernel          : 0x%x", (&end - &code));
@@ -76,6 +82,7 @@ void mm_initialize(void){
   printf("\nMemory Found At Location: 0x%x", startOfRam);
   printf("\nMemory Amount Located   : 0x%x", memAmt);
   printf("\nEnd of Physical Memory : 0x%x", memEndLoc);
-  printf("\nUsable Memeory Starts At: 0x%x", memLoc);
+  printf("\nUsable Memory Starts At: 0x%x", memLoc);
+  printf("\nUsable Amount of Memory: 0x%x", memUsable);
   placement_address = memLoc;
 }

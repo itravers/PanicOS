@@ -1,34 +1,43 @@
-// paging.c -- Defines the interface for and structures relating to paging.
-//             Written for JamesM's kernel development tutorials.
-//#include "regs.h"
+/**
+ * Author: Isaac Assegai
+ * 10/1/2017
+ * Paging Implementation
+ * Based on Tutorial by JamesMolloy
+ */
 #include <kernel/paging.h>
 #include <kernel/kheap.h>
 
-// The kernel's page directory
+/* The kernel's page directory. */
 page_directory_t *kernel_directory=0;
 
-// The current page directory;
+/* The current page directory. */
 page_directory_t *current_directory=0;
 
-// A bitset of frames - used or free.
+/* A bitset of frames - used or free. */
 u32int *frames;
+
+/* The total number of frames available in ram */
 u32int nframes;
 
-// Defined in kheap.c
+/* The address where the heap is initialized. Defined in mm.c */
 extern u32int placement_address;
+
+/* The kernel heap, defined in kheap.c */
 extern heap_t *kheap;
 
-// Macros used in the bitset algorithms.
+/* defined in mm.c - The amount of memory usable for allocation, after the kernel. */
+extern memUsable;
+
+/* Macros used in the bitset algorithms. */
 #define INDEX_FROM_BIT(a) (a/(8*4))
 #define OFFSET_FROM_BIT(a) (a%(8*4))
 
-// Static function to set a bit in the frames bitset
-static void set_frame(u32int frame_addr)
-{
-    u32int frame = frame_addr/0x1000;
-    u32int idx = INDEX_FROM_BIT(frame);
-    u32int off = OFFSET_FROM_BIT(frame);
-    frames[idx] |= (0x1 << off);
+/* Marks a frame as "set" in the frames[] bitset */
+static void set_frame(u32int frame_addr){
+  u32int frame = frame_addr/0x1000;
+  u32int idx = INDEX_FROM_BIT(frame);
+  u32int off = OFFSET_FROM_BIT(frame);
+  frames[idx] |= (0x1 << off);
 }
 
 // Static function to clear a bit in the frames bitset
@@ -109,11 +118,9 @@ void free_frame(page_t *page)
 
 void initialise_paging()
 {
-    // The size of physical memory. For the moment we 
-    // assume it is 16MB big.
-    u32int mem_end_page = 0x1000000;
-    
-    nframes = mem_end_page / 0x1000;
+  //Calculated the number of frames available based on the amound of memUsable
+    nframes = memUsable / 0x1000;
+    printf("\n Number of Frames Total: 0x%i", nframes);
     frames = (u32int*)kmalloc(INDEX_FROM_BIT(nframes));
     memset(frames, 0, INDEX_FROM_BIT(nframes));
     
