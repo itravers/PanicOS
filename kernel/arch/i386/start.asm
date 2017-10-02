@@ -1,7 +1,11 @@
+; start.asm
+; Author: Isaac Assegai
+; Date: 5/15/2015
 ; This is the kernel's entry point. We could either call main here,
 ; or we can use this to setup the stack or other nice stuff, like
 ; perhaps setting up the GDT and segments. Please note that interrupts
 ; are disabled at this point: More on interrupts later!
+; Based on Brans Kernel Development Tutorial & OSDev barebones tutorial
 [BITS 32]
 global start
 start:
