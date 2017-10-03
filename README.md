@@ -61,6 +61,12 @@ export TARGET=i686-elf
 export PATH="$PREFIX/bin:$PATH"
 ```
 
+##### Libs needed to build lib-gcc
+```shell
+libgmp3-dev
+libmpfr-dev
+```
+
 ##### make
 make is the build system that calls binutils and gcc to compile PanicOS
 ```shell
@@ -131,7 +137,7 @@ sudo apt-get install xorriso
 ```
 
 ##### qemu
-qemu is the virtual machine that emulates a x86 system that we will run the PanicOS kernel in
+qemu is the virtual machine that emulates a x86 system that we will run the PanicOS kernel in (53MB)
 ```shell
 sudo apt-get install qemu-system-x86
 ```
