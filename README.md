@@ -29,6 +29,12 @@ It is derived from the following tutorials
 4. JamesM's kernel development tutorials (http://www.jamesmolloy.co.uk/tutorial_html/index.html)
    The first version of PanicOS's virtual filesystem and its initial
    ramdisks is is derived from JamesM's kernel development tutorials.
+   
+Download PanicOS
+----------------
+```shell
+git clone https://github.com/itravers/PanicOS.git
+```
 
 Requirements of PanicOS
 -----------------------
@@ -37,6 +43,7 @@ In order to run and compile PanicOS the following is
 required of the host operating system.
 
 * Linux OS
+* Make
 * i686-elf-as cross assembler
 * i686-elf-gcc cross compiler
 * qemu Virtual Machine
@@ -48,6 +55,12 @@ Configure PATH variables in preparation for compiling binutils and gcc
 export PREFIX="$HOME/opt/cross"
 export TARGET=i686-elf
 export PATH="$PREFIX/bin:$PATH"
+```
+
+##### make
+make is the build system that calls binutils and gcc to compile PanicOS
+```shell
+sudo apt-get install make
 ```
 
 ##### binutils  
