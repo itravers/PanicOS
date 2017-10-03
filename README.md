@@ -63,8 +63,8 @@ export PATH="$PREFIX/bin:$PATH"
 
 ##### Libs needed to build lib-gcc
 ```shell
-libgmp3-dev
-libmpfr-dev
+sudo apt-get install libgmp3-dev
+sudo apt-get install libmpfr-dev
 ```
 
 ##### make
