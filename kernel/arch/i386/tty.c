@@ -46,12 +46,14 @@ void terminal_moveCursor(void){
  * Convert an array of VGA entries to a corresponding array of chars
  * Removes the vga color info so all we have left are the chars
  */
-uint8_t* vgaArray_to_charArray(uint16_t* currentRowVga, int arrayLength){
-  uint8_t charArray[arrayLength];
+uint8_t* vgaArray_to_charArray(uint8_t* charArray, uint16_t* currentRowVga, int arrayLength){
+  //uint8_t charArray[arrayLength];
   for(int n = 0; n < arrayLength; n++){
     charArray[n] = make_charFromVgaEntry(currentRowVga[n]);
   }
-  return charArray;
+  //charArray[arrayLength] = '\0';	
+   printf(&charArray); //without this, the charArray is not recognized... 
+  //return charArray;//changed this, we are passing by reference now
 }
 
 /* Returns a char array of all the character on the terminals current row. */
@@ -67,9 +69,12 @@ char* terminal_getCurrentRowChars(){
   for(int i = j; i >=0; i--){
     currentChar = make_charFromVgaEntry(terminal_buffer[i]);
     if(currentChar == '$'){
+  //    printf("\nfound $");
       int arrayLength = VGA_WIDTH - (i%80);
+    //  printf("\narrayLength: %i", arrayLength);
       memcpy(currentRowVga, &terminal_buffer[i], arrayLength);
-      charArray = vgaArray_to_charArray(currentRowVga, arrayLength);
+      //charArray = vgaArray_to_charArray(currentRowVga, arrayLength);
+      vgaArray_to_charArray(charArray, currentRowVga, arrayLength);
       break;
     }
     j = i;
