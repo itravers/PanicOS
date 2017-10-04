@@ -44,6 +44,9 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   timer_install();
   keyboard_install();
   mm_initialize();
+
+  printf("\nMultiboot Mods Loaded: %i", mbt->mods_count);
+
 //  kheap_test(); 
 
 //kheap testing
