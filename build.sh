@@ -6,7 +6,7 @@
 ##########################################################
 set -e
 . ./headers.sh
-
+. ./initrd/initrd.sh
 
 export PATH="$HOME/opt/cross/bin:$PATH"
 
@@ -14,4 +14,4 @@ for PROJECT in $PROJECTS; do
   DESTDIR="$PWD/sysroot" $MAKE -C $PROJECT install
 done
 
-cp initrd.img sysroot/boot/initrd.img
+mv initrd.img sysroot/boot/initrd.img

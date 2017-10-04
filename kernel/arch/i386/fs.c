@@ -25,12 +25,14 @@ void list_fs(void){
         {
             printf(" (file)");
             char buf[256];
-            //u32int sz = read_fs(fsnode, 0, 256, buf);
+            //u32int sz = read_fs(fsnode, 0, 256, buf); this write over something weird
+            /*
             int j;
-            //for (j = 0; j < sz; j++)
-              //  printf("%s", buf[j]);
+            for (j = 0; j < sz; j++)
+                puts(buf[j]);
             
             //printf("\"\n");
+            */
         }
         i++;
     }
