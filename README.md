@@ -2,6 +2,10 @@ PanicOS - A Hobby Operating System
 ==================================
 Version 0.0.2
 
+<p align="center">
+   <img src="https://i.imgur.com/6vBowK0.png" width="540" height="300" alt="PanicOS Screenshot"></img>
+</p>
+
 Introduction
 ------------
 
