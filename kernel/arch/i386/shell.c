@@ -4,6 +4,8 @@
  * Controls the initial built in shell
  */
 
+#include<kernel/fs.h> //for list_fs
+
 char lastChar; /* The last character sent from keyboard to shell */
 char* command; /* The command parsed */
 
@@ -62,14 +64,16 @@ void process_command(){
   if(strcmp("$cls", trimmedCommand) == 0){
     terminal_clearScreen();//cls clears the screen
   }else if(strcmp("$uptime", trimmedCommand) == 0){
-    printf("Uptime: %i Seconds", seconds_passed);//prints uptime in seconds
+    printf(" Uptime: %i Seconds", seconds_passed);//prints uptime in seconds
   }else if(strcmp("$help", trimmedCommand) == 0){
-    printf("Possible Commands: cls, uptime, help, mem");
+    printf(" Possible Commands: cls, uptime, help, mem, ls");
   }else if(strcmp("$mem", trimmedCommand) == 0){
     printf(" Memory Location: 0x%x\n", memLoc);
-    printf("Memory Amount  : 0x%x", memAmt);
+    printf(" Memory Amount  : 0x%x", memAmt);
+  }else if(strcmp("$ls", trimmedCommand) == 0){
+    list_fs();
   }else{
-    printf("Error: Command Not Found: %s", trimmedCommand);
+    printf(" Error: Command Not Found: %s", trimmedCommand);
   }
  
   //reset lastChar and command so we can get a new one with no interference

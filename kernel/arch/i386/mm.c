@@ -35,6 +35,12 @@ int memUsable;
 /* memEndLoc is a pointer to the end of memory, as calculated in mm_initialze (memLoc+memAmt)*/
 void* memEndLoc;
 
+/* Initial RamDisk Location, end and size. */
+u32int initrd_location; //defined in kernel.c
+u32int initrd_end;
+u32int initrd_size;
+
+
 /* The linkedlist header used for memory allocation. */
 typedef struct mm_header{
   void* ptr;
@@ -49,7 +55,8 @@ void* pAlloc(unsigned int);
 /**
  * Sets up memory location
  */
-void mm_initialize(void){
+void mm_initialize(u32int initrd_location){
+  initrd_location = initrd_location;
   //Get the memory map from the multiboot_info
   multiboot_memory_map_t* mmap = mbt->mmap_addr;
 
@@ -63,6 +70,10 @@ void mm_initialize(void){
     mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
   }
 
+  /* Calculate the initrd (ramdisk size) */
+  initrd_end = *(u32int*)(mbt->mods_addr+4);
+  initrd_size = initrd_end - initrd_location;
+
   /* Only used to display the start location of Ram, then promptly forgotten */
   void* startOfRam = memLoc;
 
@@ -70,7 +81,11 @@ void mm_initialize(void){
   memEndLoc = memLoc + memAmt;
 
   /* Add the size of the kernel to memLoc at the nearest 4kb boundry */
-  memLoc += roundUp(&end - &code, 4096);  
+  memLoc += roundUp(&end - &code, 4096); 
+
+  /* Add the size of the initrd to memLoc at the nearest 4kb boundry */
+  memLoc += roundUp(initrd_size, 4096); 
+
 
   /* Calculate the amount of memory that is usable for heap allocation after kernel*/
   memUsable = memEndLoc - memLoc;
@@ -82,6 +97,9 @@ void mm_initialize(void){
   printf("\nMemory Found At Location: 0x%x", startOfRam);
   printf("\nMemory Amount Located   : 0x%x", memAmt);
   printf("\nEnd of Physical Memory : 0x%x", memEndLoc);
+  printf("\nInitrd Starts At       : 0x%x", initrd_location);
+  printf("\nInitrd Ends At         : 0x%x", initrd_end);
+  printf("\nInitrd Size            : 0x%x", initrd_size);
   printf("\nUsable Memory Starts At: 0x%x", memLoc);
   printf("\nUsable Amount of Memory: 0x%x", memUsable);
   placement_address = memLoc;
