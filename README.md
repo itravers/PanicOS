@@ -29,6 +29,16 @@ It is derived from the following tutorials
 4. JamesM's kernel development tutorials (http://www.jamesmolloy.co.uk/tutorial_html/index.html)
    The first version of PanicOS's virtual filesystem and its initial
    ramdisks is is derived from JamesM's kernel development tutorials.
+   
+Features
+--------
+* GDT & IDT tables properly setup.
+   
+Download PanicOS
+----------------
+```shell
+git clone https://github.com/itravers/PanicOS.git
+```
 
 Requirements of PanicOS
 -----------------------
@@ -37,6 +47,7 @@ In order to run and compile PanicOS the following is
 required of the host operating system.
 
 * Linux OS
+* Make
 * i686-elf-as cross assembler
 * i686-elf-gcc cross compiler
 * qemu Virtual Machine
@@ -50,8 +61,28 @@ export TARGET=i686-elf
 export PATH="$PREFIX/bin:$PATH"
 ```
 
+##### Libs needed to build lib-gcc
+```shell
+sudo apt-get install libgmp3-dev
+sudo apt-get install libmpfr-dev
+```
+
+##### make
+make is the build system that calls binutils and gcc to compile PanicOS
+```shell
+sudo apt-get install make
+```
+
+##### GCC
+You'll need a copy of GCC for your hosts operating system in order to compile
+the GCC Cross compiler. You actually need 2 different GCC's altogether.
+Luckily this one is easy to install.
+```shell
+sudo apt-get install g++
+```
+
 ##### binutils  
-binutils includes the linker required to cross-compile PanicOS
+binutils includes the linker required to cross-compile PanicOS (39MB)(3-5 Minute Compile)
 ```shell
 mkdir $HOME/src
 cd $HOME/src
@@ -69,15 +100,16 @@ nasm is the assembler we use to assemble PanicOS
 sudo apt-get install nasm
 ```
 
-##### gcc
-gcc includes the c compiler required to cross-compile PanicOS
+##### GCC Cross Compiler
+GCC Cross Compiler includes the c compiler required to cross-compile PanicOS (107MB)(30 Minute Compile)
 
 ```shell
 cd $HOME/src
 wget http://www.netgull.com/gcc/releases/gcc-7.2.0/gcc-7.2.0.tar.gz
 tar -xvf gcc-7.2.0.tar.gz
-
+```
 download gmp mpfr and mpc
+```shell
 cd gcc-7.2.0
 contrib/download_prerequisites
 
@@ -105,7 +137,7 @@ sudo apt-get install xorriso
 ```
 
 ##### qemu
-qemu is the virtual machine that emulates a x86 system that we will run the PanicOS kernel in
+qemu is the virtual machine that emulates a x86 system that we will run the PanicOS kernel in (53MB)
 ```shell
 sudo apt-get install qemu-system-x86
 ```
@@ -130,5 +162,4 @@ PanicOS includes shell scripts to boot the qemu VM, just invoke
 
 Issues
 --------------
-* There is apparently a difference between the build tools originally used for Panic OS 
-  and the newest version. When using binutils-2.29.1 with gcc-7.2.0 the shell goes into an infinite loop
+
