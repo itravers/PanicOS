@@ -49,25 +49,8 @@ void wait_for_command(){
 
 /* Process a shell command. */
 void process_command(){
-/* //we don't need this check
-  if(command == 0x0){
-    printf("\nCommand is Empty: 0x%x", command);
-    printf("\nCommand is Empty: %s", command);
-    return 0;
-  }
-*/
 
-  //Trim the command to get rid of un-needed whitespace
-  
-/* don't need to trim the command if we are keeping a buffer isntead of reading from tty
-  int originalLength = strlen(command);
-  char* trimmedCommand = strtrim(command, originalLength);
-  int trimmedLength = strlen(trimmedCommand);
-*/
-
-  //printf("processing command: %s", trimmedCommand);
-
-  // Test our trimmedCommand to see if it matches a given command, if so, executes that command
+  // Test our command to see if it matches a given command, if so, executes that command
   if(strcmp("cls", command) == 0){
     terminal_clearScreen();//cls clears the screen
   }else if(strcmp("uptime", command) == 0){
@@ -102,6 +85,13 @@ void shell_putchar(char c){
     command_buf[buf_location] = '\0';
     buf_location = 0;
     terminal_newLine();
+  }else if(c == '\b'){
+    //don't backspace if we are at the beginning of the command buffer
+    if(buf_location > 0){
+      buf_location--;
+      terminal_backspace();
+    }
+    //printf("\\b");
   }else{
     command_buf[buf_location] = c;
     buf_location++;

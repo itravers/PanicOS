@@ -190,3 +190,22 @@ void terminal_write(const char* data, size_t size){
 void terminal_writestring(const char* data){
 	terminal_write(data, strlen(data));
 }
+
+/* Sets the terminal back 1 space, sets that entry to ' ', then sets the terminal back 1 space again. */
+void terminal_backspace(void){
+  terminal_back(1);
+  terminal_putchar(' ');
+  terminal_back(1);
+  terminal_moveCursor();
+}
+
+/* Sets the current location back x space.*/
+void terminal_back(int x){
+  //move to previous row if needed
+  if(terminal_column - x < 0){
+    terminal_row--;
+    terminal_column = VGA_WIDTH - (x - terminal_column);
+  }else{
+    terminal_column -= x;
+  }
+}
