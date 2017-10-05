@@ -7,5 +7,5 @@ set -e
 . ./clean.sh
 . ./iso.sh
 
-qemu-system-$(./target-triplet-to-arch.sh $HOST) -kernel isodir/boot/PanicOS.kernel
-#qemu-system-$(./target-triplet-to-arch.sh $HOST) -iso isodir/boot/PanicOS.iso
+#qemu-system-$(./target-triplet-to-arch.sh $HOST) -kernel isodir/boot/PanicOS.kernel
+qemu-system-$(./target-triplet-to-arch.sh $HOST) -cdrom isodir/boot/PanicOS.iso

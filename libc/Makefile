@@ -48,6 +48,7 @@ string/reverseString.o \
 string/itoa.o \
 string/strcmp.o \
 string/strtrim.o \
+string/strcpy.o \
 
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \

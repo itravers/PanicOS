@@ -5,12 +5,14 @@
  */
 
 #include <kernel/multiboot.h>
+#include <kernel/fs.h>
 #include <stdlib.h>
 //#include <kernel/paging.h>
 
 /* Structure passed in by start.asm. Used to access bootloader info
    We use this in mm.c to find the location of usable memory. */
 struct multiboot_info* mbt;
+u32int initrd_location;
 
 /**
  * Reads a single byte from an 8-bit port
@@ -35,7 +37,10 @@ void outportb (unsigned short _port, unsigned char _data){
  */
 int main(struct multiboot_info* mbtt, unsigned int magic){
   mbt = mbtt; //we access mbt in mm.c
-//int main(){
+
+  /* Find the initrd location from mbt */
+  initrd_location = *((u32int*)mbt->mods_addr);
+
 	gdt_install();
 	idt_install();
   isrs_install();
@@ -43,25 +48,18 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   terminal_initialize();
   timer_install();
   keyboard_install();
-  mm_initialize();
-//  kheap_test(); 
+  mm_initialize(initrd_location);
+  printf("\nMultiboot Mods Loaded: %i", mbt->mods_count);//must be after terminal_init
 
-//kheap testing
-  u32int a = kmalloc(8);
-initialise_paging();
-u32int b = kmalloc(0x100000);
-u32int c = kmalloc(32);
-printf("\na: 0x%x", a);
-printf("\nb: 0x%x", b);
-printf("\nc: 0x%x", c);
+  /* Make sure the initial ram disk is loaded (initrd) */
+  ASSERT(mbt->mods_count > 0);
+  
+  initialise_paging();
 
-kfree(c);
-//kfree(b);
-u32int d = kmalloc(12);
-printf("\nd: 0x%x", d);
- 
+  //Initiaze the initial ramdisk (initrd) and set it as the filesystem root
+  fs_root = initialise_initrd(initrd_location);
 
-
+  printf("\nfs_root in init: 0x%x", fs_root);
 /*//page fault testing
   printf("\nhello paging world!");
   u32int *ptr = (u32int*)0xA0000000;
