@@ -69,4 +69,14 @@ void serial_configure_buffers(unsigned short);
   */
 void serial_configure_modem(unsigned short);
 
+/** serial_is_transmit_fifo_empty:
+ *  Checks whether the transmit FIFO queue is empty or not for the given COM
+ *  port.
+ *
+ *  @param  com The COM port
+ *  @return 0 if the transmit FIFO queue is not empty
+ *          1 if the transmit FIFO queue is empty
+ */
+int serial_is_transmit_fifo_empty(unsigned int);
+
 #endif
