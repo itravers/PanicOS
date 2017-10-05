@@ -10,7 +10,6 @@ void list_fs(void){
   struct dirent *node = 0;
   printf("Listing FileSystem \n");
 
-
   while ( (node = readdir_fs(fs_root, i)) != 0){
     printf("\n");
     printf(node->name);
@@ -20,20 +19,29 @@ void list_fs(void){
             printf(" (directory)\n");
     }else{
       printf(" (file)");
-      char* buf = malloc(256);
-      for(int i = 0; i < sizeof(buf); i++){
-        buf[i] = "X";
+      //char* buf = kmalloc_a(256);
+      char buf[256];
+     // printf("\n buf: 0X%x", buf);
+      for(int i = 0; i < 256; i++){
+        buf[i] = 'X';
       }
 
-      printf("%s", buf[128]);
-      //u32int sz = read_fs(fsnode, 0, 256, buf); this write over something weird
-      /*
+      //buf[10] = '\0';
+
+      //putchar(buf[9]);
+      //printf("\nbuf: %s", buf);
+
+      printf("\n");
+
+      //u32int sz = 256;
+      u32int sz = read_fs(fsnode, 0, 256, buf); //this write over something weird
+ 
       int j;
       for (j = 0; j < sz; j++)
-        puts(buf[j]);
+        putchar(buf[j]);
             
       //printf("\"\n");
-      */
+      
     }
     i++;
   }
@@ -41,6 +49,7 @@ void list_fs(void){
 
 u32int read_fs(fs_node_t *node, u32int offset, u32int size, u8int *buffer)
 {
+    printf(" ");//This needs to be here, otherwise the command buffer gets messed up???
     // Has the node got a read callback?
     if (node->read != 0)
         return node->read(node, offset, size, buffer);
