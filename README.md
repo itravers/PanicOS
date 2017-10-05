@@ -45,6 +45,7 @@ Features
 * Simple Memory Management
 * Paging
 * Initial Ramdisk Setup and Working (initrd)
+* Basic Serial Driver for debugging purposes
    
 Download PanicOS
 ----------------
