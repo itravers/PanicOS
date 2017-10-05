@@ -7,6 +7,8 @@
 #include<kernel/fs.h> //for list_fs
 
 char lastChar; /* The last character sent from keyboard to shell */
+char command_buf[256];
+int buf_location = 0;
 char* command; /* The command parsed */
 
 extern int seconds_passed; /* From timer.c, the seconds passed since system boot, uptime*/
@@ -39,8 +41,10 @@ void wait_for_command(){
   while(lastChar != '\n'){
     terminal_getRow();//filler, not used except to cause while loop to wait
   }
-  command = terminal_getCurrentRowChars();
-  lastChar = 0; 
+  //command = terminal_getCurrentRowChars();
+  command = command_buf;
+  lastChar = 0;
+  //printf("command is: %s", command); 
 }
 
 /* Process a shell command. */
@@ -54,26 +58,29 @@ void process_command(){
 */
 
   //Trim the command to get rid of un-needed whitespace
+  
+/* don't need to trim the command if we are keeping a buffer isntead of reading from tty
   int originalLength = strlen(command);
   char* trimmedCommand = strtrim(command, originalLength);
   int trimmedLength = strlen(trimmedCommand);
+*/
 
   //printf("processing command: %s", trimmedCommand);
 
   // Test our trimmedCommand to see if it matches a given command, if so, executes that command
-  if(strcmp("$cls", trimmedCommand) == 0){
+  if(strcmp("cls", command) == 0){
     terminal_clearScreen();//cls clears the screen
-  }else if(strcmp("$uptime", trimmedCommand) == 0){
+  }else if(strcmp("uptime", command) == 0){
     printf(" Uptime: %i Seconds", seconds_passed);//prints uptime in seconds
-  }else if(strcmp("$help", trimmedCommand) == 0){
+  }else if(strcmp("help", command) == 0){
     printf(" Possible Commands: cls, uptime, help, mem, ls");
-  }else if(strcmp("$mem", trimmedCommand) == 0){
+  }else if(strcmp("mem", command) == 0){
     printf(" Memory Location: 0x%x\n", memLoc);
     printf(" Memory Amount  : 0x%x", memAmt);
-  }else if(strcmp("$ls", trimmedCommand) == 0){
+  }else if(strcmp("ls", command) == 0){
     list_fs();
   }else{
-    printf(" Error: Command Not Found: %s", trimmedCommand);
+    printf(" Error: Command Not Found: %s", command);
   }
  
   //reset lastChar and command so we can get a new one with no interference
@@ -92,8 +99,12 @@ void shell_putchar(char c){
   if(c == '\n'){
     //handle enter key
     //right now we will just terminal_newline, later we will process a string
+    command_buf[buf_location] = '\0';
+    buf_location = 0;
     terminal_newLine();
   }else{
+    command_buf[buf_location] = c;
+    buf_location++;
     terminal_putchar(c);
   }
   lastChar = c;
