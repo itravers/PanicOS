@@ -238,7 +238,7 @@ void printScreen(char *title, int titleLength, char *subTitle, int subTitleLengt
 }
 
 void terminal_setWelcomeScreen(){
-  printf("Setting Welcome Screen\n");
+  //printf("Setting Welcome Screen\n");
   int titleLength = 7;
   char* title = "PanicOS";
   char* subTitle = "PLEASE DON'T PANIC";

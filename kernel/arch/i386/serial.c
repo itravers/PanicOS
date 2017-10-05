@@ -2,6 +2,8 @@
  * Author: Isaac Assegai
  * Date  : 10/5/2017
  * Implements functions for communicating over serial ports
+ * Based on: "The little book about OS development
+ * and: The OSDev Serial ports Page http://wiki.osdev.org/Serial_Ports
  */
 
 #include <kernel/serial.h>
@@ -71,7 +73,7 @@ void serial_configure_modem(unsigned short com){
    * Bit:     | 7 | 6 | 5  | 4  | 3   | 2   | 1   | 0   |
    * Content: | r | r | af | lb | ao2 | ao1 | rts | dtr |
    * Value:   | 0 | 0 | 0  | 0  | 0   | 0   | 1   | 1   | = 0x03 */
-  outb(SERIAL_MODEM_COMMAND_PORT(com), 0x03);
+  outb(SERIAL_MODEM_COMMAND_PORT(com), 0x0B);
 }
 
 /** serial_is_transmit_fifo_empty:
@@ -82,7 +84,7 @@ void serial_configure_modem(unsigned short com){
  *  @return 0 if the transmit FIFO queue is not empty
  *          1 if the transmit FIFO queue is empty
  */
-int serial_is_transmit_fifo_empty(unsigned int){
+int serial_is_transmit_fifo_empty(unsigned int com){
   /* 0x20 = 0010 0000 */ //The transmit fifo queue bit
   return inb(SERIAL_LINE_STATUS_PORT(com)) & 0x20;
 }
@@ -92,7 +94,20 @@ int serial_is_transmit_fifo_empty(unsigned int){
  */
 void serial_initialize(){
   //Set Serial baud rate divisor to 3 (38400 baud)
+  outb(SERIAL_COM1_BASE + 1, 0x00);    // Disable all interrupts
   serial_configure_baud_rate(SERIAL_COM1_BASE, 3);
   serial_configure_line(SERIAL_COM1_BASE);
   serial_configure_buffers(SERIAL_COM1_BASE);
+  serial_configure_modem(SERIAL_COM1_BASE);
 }
+
+/* serial_write:
+ * writes a character to the serial port
+ * When serial_is_transmit_fifo_empty is true
+ */
+void serial_write(unsigned int com, char c){
+  while(serial_is_transmit_fifo_empty(com) == 0);
+
+  outb(com, c);
+}
+

@@ -7,6 +7,7 @@
 #include <kernel/multiboot.h>
 #include <kernel/fs.h>
 #include <stdlib.h>
+#include <kernel/serial.h>
 //#include <kernel/paging.h>
 
 /* Structure passed in by start.asm. Used to access bootloader info
@@ -45,9 +46,11 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
 	idt_install();
   isrs_install();
   irq_install();
+  serial_initialize();
   terminal_initialize();
   timer_install();
   keyboard_install();
+  //serial_write(SERIAL_COM1_BASE, 'h');
   mm_initialize(initrd_location);
   printf("\nMultiboot Mods Loaded: %i", mbt->mods_count);//must be after terminal_init
 
@@ -59,7 +62,7 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   //Initiaze the initial ramdisk (initrd) and set it as the filesystem root
   fs_root = initialise_initrd(initrd_location);
 
-  printf("\nfs_root in init: 0x%x", fs_root);
+  printf("\nfs_root in init: 0x%x \n", fs_root);
 /*//page fault testing
   printf("\nhello paging world!");
   u32int *ptr = (u32int*)0xA0000000;

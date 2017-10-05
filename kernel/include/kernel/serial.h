@@ -84,4 +84,10 @@ int serial_is_transmit_fifo_empty(unsigned int);
  */
 void serial_initialize(void);
 
+/* serial_write:
+ * writes a character to the serial port
+ * When serial_is_transmit_fifo_empty is true
+ */
+void serial_write(unsigned int, char);
+
 #endif
