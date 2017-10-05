@@ -41,5 +41,32 @@
  */
 void serial_configure_baud_rate(unsigned short, unsigned short);
 
+/** serial_configure_line:
+  * Configures the line of the given serial port. The port is set
+  * to have a deta length of 8 bits, no parity bits, one stop bit
+  * and break control disabled.
+  *
+  * @param com The Serial Port to Configure
+  */
+void serial_configure_line(unsigned short);
+
+/** serial_configure_buffers:
+  * Configures the buffers of the given serial port. 
+  * lvl: How many bytes should be stored in the FIFO buffers
+  * bs: If the buffers should be 16 or 64 bytes large
+  * r: Reserved for future use
+  * dma: How the serial port data should be accessed
+  * clt: Clear the transmission FIFO buffer
+  * clr: Clear the receiver FIFO buffer
+  * e: If the FIFO buffer should be enabled or not
+  */
+void serial_configure_buffers(unsigned short);
+
+/** serial_configure_modem:
+  * Configures the modem control register.
+  * We want RTS and DTS to be 1 which means we are
+  * Ready to send data.
+  */
+void serial_configure_modem(unsigned short);
 
 #endif
