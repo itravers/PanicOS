@@ -87,3 +87,12 @@ int serial_is_transmit_fifo_empty(unsigned int){
   return inb(SERIAL_LINE_STATUS_PORT(com)) & 0x20;
 }
 
+/* serial_initialize:
+ * Sets up the serial port
+ */
+void serial_initialize(){
+  //Set Serial baud rate divisor to 3 (38400 baud)
+  serial_configure_baud_rate(SERIAL_COM1_BASE, 3);
+  serial_configure_line(SERIAL_COM1_BASE);
+  serial_configure_buffers(SERIAL_COM1_BASE);
+}

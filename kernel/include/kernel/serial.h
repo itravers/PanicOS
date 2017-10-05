@@ -79,4 +79,9 @@ void serial_configure_modem(unsigned short);
  */
 int serial_is_transmit_fifo_empty(unsigned int);
 
+/* serial_initialze:
+ * Sets up the serial port
+ */
+void serial_initialize(void);
+
 #endif
