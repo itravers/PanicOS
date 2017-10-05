@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <kernel/vga.h>
+#include <kernel/serial.h>
 
 /* The current terminal row the cursor is on. */
 size_t terminal_row;
@@ -178,6 +179,7 @@ void terminal_putchar(char c){
 	}
 	scroll(); //scroll if needed
   terminal_moveCursor();
+  serial_write(SERIAL_COM1_BASE, c);
 }
 
 /* Writes a char array of a given size to the terminal. */
