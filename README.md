@@ -2,6 +2,10 @@ PanicOS - A Hobby Operating System
 ==================================
 Version 0.0.2
 
+<p align="center">
+   <img src="https://i.imgur.com/6vBowK0.png" width="540" height="300" alt="PanicOS Screenshot"></img>
+</p>
+
 Introduction
 ------------
 
@@ -33,6 +37,14 @@ It is derived from the following tutorials
 Features
 --------
 * GDT & IDT tables properly setup.
+* Interrupt Requests & Service Routines Working (IRQ's & ISRS's)
+* Protected Mode
+* Simple Keyboard Driver 
+* Simple TTY Driver
+* Simple Shell
+* Simple Memory Management
+* Paging
+* Initial Ramdisk Setup and Working (initrd)
    
 Download PanicOS
 ----------------
