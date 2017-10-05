@@ -56,12 +56,20 @@ void process_command(){
   }else if(strcmp("uptime", command) == 0){
     printf(" Uptime: %i Seconds", seconds_passed);//prints uptime in seconds
   }else if(strcmp("help", command) == 0){
-    printf(" Possible Commands: cls, uptime, help, mem, ls");
+    printf(" Possible Commands:\n");
+    printf(" \t help       : Show this list \n");
+    printf(" \t cls        : Clears the Screen\n");
+    printf(" \t uptime     : Shows System Uptime in Seconds\n");
+    printf(" \t mem        : Lists Memory/RAM Info\n");
+    printf(" \t ls         : Lists the File System\n");
+    printf(" \t startscreen: Shows the Start Screen");
   }else if(strcmp("mem", command) == 0){
     printf(" Memory Location: 0x%x\n", memLoc);
     printf(" Memory Amount  : 0x%x", memAmt);
   }else if(strcmp("ls", command) == 0){
     list_fs();
+  }else if(strcmp("startscreen", command) == 0){
+    terminal_setWelcomeScreen();
   }else{
     printf(" Error: Command Not Found: %s", command);
   }
