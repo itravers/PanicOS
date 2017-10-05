@@ -13,3 +13,4 @@ done
 rm -rfv sysroot
 rm -rfv isodir
 rm -rfv PanicOS.iso
+rm -rfv initrd.img
