@@ -11,32 +11,32 @@ void list_fs(void){
   printf("Listing FileSystem \n");
 
 
-  while ( (node = readdir_fs(fs_root, i)) != 0)
-    {
-        printf("\n");
-        printf(node->name);
-        fs_node_t *fsnode = finddir_fs(fs_root, node->name);
+  while ( (node = readdir_fs(fs_root, i)) != 0){
+    printf("\n");
+    printf(node->name);
+    fs_node_t *fsnode = finddir_fs(fs_root, node->name);
 
-        if ((fsnode->flags&0x7) == FS_DIRECTORY)
-        {
+    if((fsnode->flags&0x7) == FS_DIRECTORY){
             printf(" (directory)\n");
-        }
-        else
-        {
-            printf(" (file)");
-            char buf[256];
-            //u32int sz = read_fs(fsnode, 0, 256, buf); this write over something weird
-            /*
-            int j;
-            for (j = 0; j < sz; j++)
-                puts(buf[j]);
+    }else{
+      printf(" (file)");
+      char* buf = malloc(256);
+      for(int i = 0; i < sizeof(buf); i++){
+        buf[i] = "X";
+      }
+
+      printf("%s", buf[128]);
+      //u32int sz = read_fs(fsnode, 0, 256, buf); this write over something weird
+      /*
+      int j;
+      for (j = 0; j < sz; j++)
+        puts(buf[j]);
             
-            //printf("\"\n");
-            */
-        }
-        i++;
+      //printf("\"\n");
+      */
     }
-  
+    i++;
+  }
 }
 
 u32int read_fs(fs_node_t *node, u32int offset, u32int size, u8int *buffer)
