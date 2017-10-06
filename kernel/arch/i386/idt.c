@@ -6,6 +6,8 @@
  * Based on Brans Kernel Development Tutorial
  */
 
+#include <kernel/idt.h>
+
 /* Defines an IDT entry */
 struct idt_entry{
   unsigned short base_lo;

@@ -16,7 +16,8 @@
 #include <kernel/timer.h> //For timer_install
 #include <kernel/tty.h> //For terminal_initialize
 #include <kernel/irq.h> //For irq_install
-#include <kernel/isrs.h> //For irq_install
+#include <kernel/isrs.h> //For isrs_install
+#include <kernel/idt.h> //For idt_install
 
 /* Include Standard Headers */
 #include <stdlib.h>
