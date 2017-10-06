@@ -6,6 +6,7 @@
  * Based on Brans Kernel Development Tutorial
  */
 
+#include <kernel/irq.h>
 #include "regs.h"
 
 /* These are own ISRs that point to our special IRQ handler

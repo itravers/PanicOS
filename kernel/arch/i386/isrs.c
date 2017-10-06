@@ -5,6 +5,7 @@
  * Based on Brans Kernel Development Tutorial
  */
 
+#include <kernel/isrs.h>
 #include "regs.h"
 
 /* Array of registered interrupt handlers. */

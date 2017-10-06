@@ -15,6 +15,8 @@
 #include <kernel/kb.h> //For keyboard_install
 #include <kernel/timer.h> //For timer_install
 #include <kernel/tty.h> //For terminal_initialize
+#include <kernel/irq.h> //For irq_install
+#include <kernel/isrs.h> //For irq_install
 
 /* Include Standard Headers */
 #include <stdlib.h>
