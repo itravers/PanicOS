@@ -11,7 +11,7 @@ initrd_file_header_t *file_headers; // The list of file headers.
 fs_node_t *initrd_root;             // Our root directory node.
 fs_node_t *initrd_dev;              // We also add a directory node for /dev, so we can mount devfs later on.
 fs_node_t *root_nodes;              // List of file nodes.
-int nroot_nodes;                    // Number of file nodes.
+unsigned int nroot_nodes;                    // Number of file nodes.
 
 struct dirent dirent;
 
@@ -50,7 +50,7 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
         !strcmp(name, "dev") )
         return initrd_dev;
 
-    int i;
+    unsigned int i;
     for (i = 0; i < nroot_nodes; i++)
         if (!strcmp(name, root_nodes[i].name))
             return &root_nodes[i];
