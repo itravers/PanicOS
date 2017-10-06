@@ -18,6 +18,7 @@
 #include <kernel/irq.h> //For irq_install
 #include <kernel/isrs.h> //For isrs_install
 #include <kernel/idt.h> //For idt_install
+#include <kernel/gdt.h> //For gdt_install
 
 /* Include Standard Headers */
 #include <stdlib.h>

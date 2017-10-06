@@ -9,6 +9,8 @@
  * Based on Brans Kernel Development Tutorial. 
  */
 
+#include <kernel/gdt.h>
+
 /* Represents an entry in the global descriptor table. */
 struct gdt_entry{
   unsigned short limit_low;
