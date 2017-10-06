@@ -23,6 +23,7 @@ char* reverseString(char*);
 char* itoa(int, char*, int);
 int strcmp(const char*, const char*);
 char* strtrim(const char*, size_t);
+void strcpy(char*, char*);
 
 #ifdef __cplusplus
 }

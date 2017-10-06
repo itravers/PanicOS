@@ -3,6 +3,7 @@
 
 #include <kernel/initrd.h>
 #include <stdlib.h>
+#include <string.h>
 
 initrd_header_t *initrd_header;     // The header.
 initrd_file_header_t *file_headers; // The list of file headers.
