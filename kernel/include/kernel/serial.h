@@ -82,7 +82,7 @@ int serial_is_transmit_fifo_empty(unsigned int);
 /* serial_initialze:
  * Sets up the serial port
  */
-void serial_initialize(void);
+void serial_initialize(unsigned int);
 
 /* serial_write:
  * writes a character to the serial port

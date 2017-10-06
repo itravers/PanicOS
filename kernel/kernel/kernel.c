@@ -46,7 +46,7 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
 	idt_install();
   isrs_install();
   irq_install();
-  serial_initialize();
+  serial_initialize(SERIAL_COM1_BASE);
   terminal_initialize();
   timer_install();
   keyboard_install();

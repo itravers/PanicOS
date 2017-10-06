@@ -7,7 +7,6 @@
 
 #if defined(__is_myos_kernel)
 #include <kernel/tty.h>
-#include <kernel/serial.h>
 #endif
 
 int putchar(int ic){
