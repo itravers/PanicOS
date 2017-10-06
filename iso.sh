@@ -14,10 +14,10 @@ mkdir -p isodir/boot/grub
 cp sysroot/boot/PanicOS.kernel isodir/boot/PanicOS.kernel
 cp sysroot/boot/initrd.img isodir/boot/initrd.img
 cat > isodir/boot/grub/grub.cfg << EOF
+set timeout=1
 menuentry "PanicOS" {
 	multiboot /boot/PanicOS.kernel
   module /boot/initrd.img 
-  boot
 }
 EOF
 grub-mkrescue -o PanicOS.iso isodir
