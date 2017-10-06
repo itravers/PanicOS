@@ -2,6 +2,7 @@
 //             Written for JamesM's kernel development tutorials.
 
 #include <kernel/initrd.h>
+#include <kernel/kheap.h> //For kmalloc
 #include <stdlib.h>
 #include <string.h>
 
