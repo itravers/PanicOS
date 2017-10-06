@@ -13,6 +13,8 @@
 #include <kernel/paging.h> //for paging_initialize
 #include <kernel/mm.h> //For mm_initialize
 #include <kernel/kb.h> //For keyboard_install
+#include <kernel/timer.h> //For timer_install
+#include <kernel/tty.h> //For terminal_initialize
 
 /* Include Standard Headers */
 #include <stdlib.h>

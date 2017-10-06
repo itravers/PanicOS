@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <kernel/vga.h>
+#include <kernel/tty.h>
 #include <kernel/serial.h>
 
 /* The current terminal row the cursor is on. */

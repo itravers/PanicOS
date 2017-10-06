@@ -6,6 +6,8 @@
  * Based on osdev barebones tutorial
  */
 
+#include <kernel/timer.h>
+
 /* The number of times timer_handler has been called since kernel booted. */
 int timer_ticks = 0;
 
