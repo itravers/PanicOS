@@ -8,9 +8,11 @@
 */
 
 #include <kernel/multiboot.h>
+#include <kernel/mm.h>
 #include <stdbool.h> //for bool type
 #include <stdlib.h> //for roundUp
 #include <stddef.h> //for size_t
+
 
 /* The multiboot_info passed into kernel main */
 extern struct multiboot_info* mbt;

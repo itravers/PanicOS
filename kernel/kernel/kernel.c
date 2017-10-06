@@ -4,14 +4,21 @@
  * Responsible for initialzing the Kernel
  */
 
+/* Include Kernel Headers */
 #include <kernel/multiboot.h>
 #include <kernel/fs.h>
-#include <stdlib.h>
-#include <stdio.h> //For printf
 #include <kernel/serial.h>
 #include <kernel/main.h>//For main_initialize
 #include <kernel/initrd.h> //For initrd_initialize
 #include <kernel/paging.h> //for paging_initialize
+#include <kernel/mm.h> //For mm_initialize
+#include <kernel/kb.h> //For keyboard_install
+
+/* Include Standard Headers */
+#include <stdlib.h>
+#include <stdio.h> //For printf
+
+
 //#include <kernel/paging.h>
 
 /* Structure passed in by start.asm. Used to access bootloader info
