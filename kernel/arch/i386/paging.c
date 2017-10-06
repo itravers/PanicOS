@@ -103,7 +103,7 @@ void free_frame(page_t *page){
 }
 
 /* Initializes the paging system. */
-void initialise_paging(){
+void paging_initialize(){
   //Calculated the number of frames available based on the amound of memUsable
   nframes = memUsable / 0x1000;
   frames = (u32int*)kmalloc(INDEX_FROM_BIT(nframes));

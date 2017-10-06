@@ -7,8 +7,11 @@
 #include <kernel/multiboot.h>
 #include <kernel/fs.h>
 #include <stdlib.h>
+#include <stdio.h> //For printf
 #include <kernel/serial.h>
 #include <kernel/main.h>//For main_initialize
+#include <kernel/initrd.h> //For initrd_initialize
+#include <kernel/paging.h> //for paging_initialize
 //#include <kernel/paging.h>
 
 /* Structure passed in by start.asm. Used to access bootloader info
@@ -59,10 +62,10 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   /* Make sure the initial ram disk is loaded (initrd) */
   ASSERT(mbt->mods_count > 0);
   
-  initialise_paging();
+  paging_initialize();
 
   //Initiaze the initial ramdisk (initrd) and set it as the filesystem root
-  fs_root = initialise_initrd(initrd_location);
+  fs_root = initrd_initialize(initrd_location);
 
   printf("\nfs_root in init: 0x%x \n", (unsigned int)fs_root);
 /*//page fault testing

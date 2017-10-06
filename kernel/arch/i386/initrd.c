@@ -55,7 +55,7 @@ static fs_node_t *initrd_finddir(fs_node_t *node, char *name)
     return 0;
 }
 
-fs_node_t *initialise_initrd(u32int location)
+fs_node_t *initrd_initialize(u32int location)
 {
     // Initialise the main and file header pointers and populate the root directory.
     initrd_header = (initrd_header_t *)location;
