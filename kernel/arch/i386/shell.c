@@ -5,6 +5,7 @@
  */
 
 #include<kernel/fs.h> //for list_fs
+#include<kernel/serial.h>
 
 char lastChar; /* The last character sent from keyboard to shell */
 char command_buf[256];

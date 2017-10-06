@@ -112,3 +112,22 @@ void serial_write(unsigned int com, char c){
   outb(com, c);
 }
 
+/** serial_received:
+ * returns true if data is waiting in the serial port
+ * Waiting to be read. 
+ */
+int serial_received(unsigned short com){
+  return inb(SERIAL_LINE_STATUS_PORT(com)) & 1;
+}
+
+/** read_serial
+ * returns the last char in the serial read buffer
+    DOES NOT WORK CORRECTLY YET
+    WE OUTPUT ALL PRINTF TO SERIAL
+    SO WHEN WE READ SERIAL, WE SEE WHAT WE'VE OUTPUT
+ */
+char read_serial(unsigned short com){
+  while(serial_received(com) == 0);
+  
+  return inb(com);
+}

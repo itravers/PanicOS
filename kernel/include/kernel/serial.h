@@ -90,4 +90,15 @@ void serial_initialize(unsigned int);
  */
 void serial_write(unsigned int, char);
 
+/** serial_received:
+ * returns true if data is waiting in the serial port
+ * Waiting to be read. 
+ */
+int serial_received(unsigned short);
+
+
+/** read_serial
+ * Returns the last char in the serial read buffer 
+ */
+char read_serial(unsigned short);
 #endif
