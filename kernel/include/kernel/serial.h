@@ -7,6 +7,7 @@
 #define _SERIAL_H
 
 #include <stdint.h>
+#include <stdlib.h> //for inb()
 
 /* The I/O ports */
 
