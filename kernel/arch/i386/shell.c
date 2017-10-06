@@ -16,6 +16,8 @@ extern int seconds_passed; /* From timer.c, the seconds passed since system boot
 extern int* memLoc; /* Location of beginning of memory. Defined in mm.c. */
 extern int memAmt; /* The amount of memory detected. Defined in mm.c */
 
+//extern char module;
+
 /* Start the shell. */
 void shell_initialize(void){
   printf("shell initialize \n");
@@ -69,6 +71,7 @@ void process_command(){
     printf(" Memory Amount  : 0x%x", memAmt);
   }else if(strcmp("ls", command) == 0){
     list_fs();
+    //printf("module location: 0x%x", module);
   }else if(strcmp("startscreen", command) == 0){
     terminal_setWelcomeScreen();
   }else{

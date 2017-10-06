@@ -17,6 +17,7 @@ cat > isodir/boot/grub/grub.cfg << EOF
 menuentry "PanicOS" {
 	multiboot /boot/PanicOS.kernel
   module /boot/initrd.img 
+  boot
 }
 EOF
 grub-mkrescue -o PanicOS.iso isodir

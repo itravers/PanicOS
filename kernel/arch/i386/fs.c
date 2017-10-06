@@ -20,6 +20,8 @@ void list_fs(void){
     printf("\n");
     printf(node->name);
     fs_node_t *fsnode = finddir_fs(fs_root, node->name);
+    
+    
 
     if((fsnode->flags&0x7) == FS_DIRECTORY){
             printf(" (directory)\n");
@@ -34,6 +36,7 @@ void list_fs(void){
 
       /* Read the contents of the file into buf */
       u32int sz = read_fs(fsnode, 0, 256, buf);
+//      if(strcmp(node->name, "testprogram") == 0) read_fs(fsnode, 0, 256, module);
       int j;
 
       /* Print out the contents of the file. */

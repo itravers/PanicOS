@@ -6,6 +6,10 @@
 
 #include <stdlib.h>
 
+/* Test running a module from the fs. */
+//typedef void (*call_module_t)(void);
+//char module[256];
+
 #define FS_FILE        0x01
 #define FS_DIRECTORY   0x02
 #define FS_CHARDEVICE  0x03
