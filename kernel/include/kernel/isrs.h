@@ -6,6 +6,10 @@
 #ifndef _ISRS_H
 #define _ISRS_H
 
+//#include "regs.h"
+
 void isrs_install(void);
+//void register_interrupt_handler(int n, void (*handler)(struct regs *r));
+//void register_interrupt_handler(int n, void(*handler)(struct*));
 
 #endif

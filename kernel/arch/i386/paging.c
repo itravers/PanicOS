@@ -7,6 +7,9 @@
  */
 #include <kernel/paging.h>
 #include <kernel/kheap.h>
+#include <kernel/isrs.h> //for register_interrupt_hander
+
+#include <stdio.h> //for printf
 
 /* The kernel's page directory. */
 page_directory_t *kernel_directory=0;
@@ -50,12 +53,12 @@ static void clear_frame(u32int frame_addr){
 }
 
 /* Tests if a Frame at frame_address is set in the frames[] bitset. */
-static u32int test_frame(u32int frame_addr){
+/*static u32int test_frame(u32int frame_addr){
   u32int frame = frame_addr/0x1000;
   u32int idx = INDEX_FROM_BIT(frame);
   u32int off = OFFSET_FROM_BIT(frame);
   return (frames[idx] & (0x1 << off));
-}
+}*/
 
 /* Returns index of the first unused frame in the frame[] bitset. */
 static u32int first_frame(){
@@ -71,6 +74,7 @@ static u32int first_frame(){
       }
     }
   }
+  return -1;
 }
 
 /* Allocate a new frame */
@@ -79,7 +83,7 @@ void alloc_frame(page_t *page, int is_kernel, int is_writeable){
     return;
   }else{
     u32int idx = first_frame();
-    if (idx == (u32int)-1){
+    if (idx == (u32int)-1 || idx == -1){
       // PANIC! no free frames!!
       PANIC("NO Free Frames!");
     }
@@ -201,6 +205,7 @@ void page_fault(struct regs* regs){
   int us = regs->err_code & 0x4;           // Processor was in user-mode?
   int reserved = regs->err_code & 0x8;     // Overwritten CPU-reserved bits of page entry?
   int id = regs->err_code & 0x10;          // Caused by an instruction fetch?
+  id = id;
 
   // Output an error message.
   printf("\nPage fault! ( ");
