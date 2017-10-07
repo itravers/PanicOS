@@ -7,6 +7,8 @@
  */
 
 #include <kernel/idt.h>
+#include <string.h> //for memcpy
+#include <stdlib.h> //for u32int
 
 /* Defines an IDT entry */
 struct idt_entry{
@@ -53,7 +55,7 @@ void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, uns
 void idt_install(){
   /* Sets the special IDT pointer up, just like in 'gdt.c' */
   idtp.limit = (sizeof (struct idt_entry) * 256) - 1;
-  idtp.base = &idt;
+  idtp.base = (u32int)&idt;
 
   /* Clear out the entire IDT, initializing it to zeros */
   memset(&idt, 0, sizeof(struct idt_entry) * 256);
