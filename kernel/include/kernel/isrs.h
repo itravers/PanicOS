@@ -9,7 +9,8 @@
 //#include "regs.h"
 
 void isrs_install(void);
+typedef void (*handler)(struct regs *r);
 //void register_interrupt_handler(int n, void (*handler)(struct regs *r));
-//void register_interrupt_handler(int n, void(*handler)(struct*));
+void register_interrupt_handler(int n, handler callback);
 
 #endif

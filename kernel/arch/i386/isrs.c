@@ -134,8 +134,8 @@ char *exception_messages[] = {
 };
 
 /* Register a function as an interrupt handler, for interrupt num n. */
-void register_interrupt_handler(int n, void(*handler)(struct regs *r)){
-//void register_interrupt_handler(int n, handler*){
+//void register_interrupt_handler(int n, void(*handler)(struct regs *r)){
+void register_interrupt_handler(int n, handler handler){
   interrupt_handlers[n] = handler;
 }
 
