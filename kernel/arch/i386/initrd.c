@@ -17,6 +17,7 @@ fs_node_t *initrd_dev;              // We also add a directory node for /dev, so
 fs_node_t *root_nodes;              // List of file nodes.
 unsigned int nroot_nodes;                    // Number of file nodes.
 
+
 struct dirent dirent;
 
 /* Reads a file pointed to by node into a buffer. */
@@ -114,6 +115,14 @@ fs_node_t *initrd_initialize(u32int location){
     file_headers[i].offset += location;
     // Create a new file node.
     strcpy(root_nodes[i].name, file_headers[i].name);
+    //printf("\nroot_notes.name: %s", root_nodes[i].name);
+    //save the version.txt files node, for later reference
+    if(strcmp(root_nodes[i].name, "version.txt") == 0){
+      version_node = &root_nodes[i];
+      
+      //printf("\nversion_node.name: %s", version_node->name);
+    }
+
     root_nodes[i].mask = root_nodes[i].uid = root_nodes[i].gid = 0;
     root_nodes[i].length = file_headers[i].length;
     root_nodes[i].inode = i;

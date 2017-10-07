@@ -67,4 +67,7 @@ struct dirent *readdir_fs(fs_node_t *node, u32int index);
 fs_node_t *finddir_fs(fs_node_t *node, char *name);
 void list_fs(void);
 
+/* Finds a file & returns it's contents in a character array */
+//void 
+
 #endif

@@ -4,7 +4,8 @@
  * Controls the initial built in shell
  */
 
-#include<kernel/fs.h> //for list_fs
+#include<kernel/fs.h> //for list_fs & read_fs
+#include<kernel/initrd.h> //for version_node
 #include<kernel/serial.h>
 #include<kernel/tty.h> //terminal_ functions
 
@@ -74,13 +75,18 @@ void process_command(){
     printf(" \t uptime     : Shows System Uptime in Seconds\n");
     printf(" \t mem        : Lists Memory/RAM Info\n");
     printf(" \t ls         : Lists the File System\n");
-    printf(" \t startscreen: Shows the Start Screen");
+    printf(" \t startscreen: Shows the Start Screen\n");
+    printf(" \t version    : Shows the Kernel Version");
   }else if(strcmp("mem", command) == 0){
     printf(" Memory Location: 0x%x\n", (u32int) memLoc);
     printf(" Memory Amount  : 0x%x", memAmt);
   }else if(strcmp("ls", command) == 0){
     list_fs();
     //printf("module location: 0x%x", module);
+  }else if(strcmp("version", command) == 0){
+    char* verBuf[256];
+    u32int sz = read_fs(version_node, 0, 256, verBuf);
+    printf(" PanicOS Version: %s", verBuf);
   }else if(strcmp("startscreen", command) == 0){
     terminal_setWelcomeScreen();
   }else{

@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include "fs.h"
 
+fs_node_t *version_node; //The node of the version.txt file
+
 /* The very first structure on the ramdisk
  * Tells us now many files are included on the disk */
 typedef struct{
