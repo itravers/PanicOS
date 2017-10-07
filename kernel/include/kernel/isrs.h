@@ -7,6 +7,7 @@
 #define _ISRS_H
 
 //#include "regs.h"
+#include<regs.h>
 
 void isrs_install(void);
 typedef void (*handler)(struct regs *r);

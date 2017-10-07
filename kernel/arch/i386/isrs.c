@@ -6,6 +6,7 @@
  */
 
 #include <kernel/isrs.h>
+#include <kernel/idt.h> //for idt_set_gate
 #include "regs.h"
 #include <stdio.h> //for puts
 
