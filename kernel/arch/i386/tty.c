@@ -7,6 +7,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h> //for outb
 #include <kernel/vga.h>
 #include <kernel/tty.h>
 #include <kernel/serial.h>
@@ -23,6 +25,8 @@ uint8_t terminal_color;
 /* The address where the terminal is located. */
 uint16_t* terminal_buffer;
 
+void terminal_back(int);
+
 /**
  * Moves the cursor to the correct position as given by
  * terminal_row, and terminal_column
@@ -38,17 +42,17 @@ void terminal_moveCursor(void){
    * These are the high and low butes of the index
    * That show where the harder cursor is to be 
    * blinking */
-  outportb(0x3D4, 14);
-  outportb(0x3D5, temp >> 8);
-  outportb(0x3D4, 15);
-  outportb(0x3D5, temp);
+  outb(0x3D4, 14);
+  outb(0x3D5, temp >> 8);
+  outb(0x3D4, 15);
+  outb(0x3D5, temp);
 }
 
 /**
  * Convert an array of VGA entries to a corresponding array of chars
  * Removes the vga color info so all we have left are the chars
  */
-uint8_t* vgaArray_to_charArray(uint8_t* charArray, uint16_t* currentRowVga, int arrayLength){
+/*uint8_t* vgaArray_to_charArray(uint8_t* charArray, uint16_t* currentRowVga, int arrayLength){
   //uint8_t charArray[arrayLength];
   for(int n = 0; n < arrayLength; n++){
     charArray[n] = make_charFromVgaEntry(currentRowVga[n]);
@@ -56,10 +60,10 @@ uint8_t* vgaArray_to_charArray(uint8_t* charArray, uint16_t* currentRowVga, int 
   //charArray[arrayLength] = '\0';	
    printf(&charArray); //without this, the charArray is not recognized... 
   //return charArray;//changed this, we are passing by reference now
-}
+}*/
 
 /* Returns a char array of all the character on the terminals current row. */
-char* terminal_getCurrentRowChars(){
+/*char* terminal_getCurrentRowChars(){
   uint16_t* currentRowVga[VGA_WIDTH];//array of vgaEntries in last terminal_row
   uint8_t* charArray; //create a char array the size of last terminal_row
 
@@ -83,6 +87,7 @@ char* terminal_getCurrentRowChars(){
   }
   return charArray;
 }
+*/
 
 /**
  * Returns the current terminal_row of the tty
@@ -142,6 +147,7 @@ void scroll(void){
      backcolor too */
 	terminal_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
 	blank = make_vgaentry('.', terminal_color);
+  blank = blank;//remove unused compiler warning
 
   /* Row 25 is the end, this means we need to scroll up */
   if(terminal_row >= 25){
@@ -205,7 +211,7 @@ void terminal_backspace(void){
 /* Sets the current location back x space.*/
 void terminal_back(int x){
   //move to previous row if needed
-  if(terminal_column - x < 0){
+  if((int)terminal_column - x < 0){
     terminal_row--;
     terminal_column = VGA_WIDTH - (x - terminal_column);
   }else{
@@ -215,6 +221,7 @@ void terminal_back(int x){
 
 /* Prints an ascii array to the screen */
 void printScreen(char *title, int titleLength, char *subTitle, int subTitleLength, int newAttribute){
+  newAttribute = newAttribute; //fix compiler nonuse warning
   /* Reset the carriage to the start of the page. */
   terminal_row = 0;
   terminal_column = 0;
