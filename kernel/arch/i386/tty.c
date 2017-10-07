@@ -211,15 +211,15 @@ void terminal_back(int x){
 }
 
 /* Prints an ascii array to the screen */
-void printScreen(char *title, int titleLength, char *subTitle, int subTitleLength, int newAttribute){
-  /* Reset the carriage to the start of the page. */
+/*void printScreen(char *title, int titleLength, char *subTitle, int subTitleLength, int newAttribute){
+  // Reset the carriage to the start of the page.
   terminal_row = 0;
   terminal_column = 0;
-  /* Save the old attribute so we can restore it after the loop. */
+  // Save the old attribute so we can restore it after the loop. 
   //int oldAttrib = attrib;
-  /*We can loop through the char Array pulling each char out
-    mixing it with the cooresponding attribute then print
-    the character. */
+  //We can loop through the char Array pulling each char out
+  //mixing it with the cooresponding attribute then print
+  //the character. 
 
   //attrib = newAttribute;
   terminal_clearScreen();
@@ -246,4 +246,4 @@ void terminal_setWelcomeScreen(){
   int att =(0x04 << 4)|(0x00 & 0X0F);
 //  puts(s);
   printScreen(title, titleLength, subTitle, subTitleLength, att);
-}
+}*/

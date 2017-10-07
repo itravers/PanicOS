@@ -1,4 +1,4 @@
-#include<kernel/tty.h>
+//#include<kernel/tty.h>
 
 extern int seconds_passed;
 
@@ -8,8 +8,8 @@ int main_initialize(){
     terminal_getRow();
   }
   //print the welcome screen for 2 seconds and then display a prompt
-	//printf("\nWelcome To PanicOS!");
-  terminal_setWelcomeScreen(); 
+	printf("\nWelcome To PanicOS!");
+//  terminal_setWelcomeScreen(); 
 
 
  // shell_initialize();
