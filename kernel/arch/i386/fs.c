@@ -6,6 +6,7 @@
  */
 
 #include <kernel/fs.h>
+#include <stdio.h> //For putchar
 
 /* The root of the filesystem. */
 fs_node_t *fs_root = 0;
@@ -27,7 +28,7 @@ void list_fs(void){
             printf(" (directory)\n");
     }else{
       printf(" (file)");
-      char buf[256];
+      u8int buf[256];
       for(int i = 0; i < 256; i++){
         buf[i] = 'X';
       }
@@ -37,7 +38,7 @@ void list_fs(void){
       /* Read the contents of the file into buf */
       u32int sz = read_fs(fsnode, 0, 256, buf);
 //      if(strcmp(node->name, "testprogram") == 0) read_fs(fsnode, 0, 256, module);
-      int j;
+      u32int j;
 
       /* Print out the contents of the file. */
       for (j = 0; j < sz; j++){
@@ -56,9 +57,6 @@ void list_fs(void){
  * returns: the size of the file read. 
  */
 u32int read_fs(fs_node_t *node, u32int offset, u32int size, u8int *buffer){
-  //This blank printf needs to be here, otherwise the command buffer gets messup up.. weird.
-  printf(" ");
-
   // Has the node got a read callback?
   if (node->read != 0){
     return node->read(node, offset, size, buffer);
@@ -80,6 +78,8 @@ u32int write_fs(fs_node_t *node, u32int offset, u32int size, u8int *buffer){
 /* Opens a file given by *node. */
 void open_fs(fs_node_t *node, u8int read, u8int write){
   // Has the node got an open callback?
+  read = read;//reference to fix unused parameter warning
+  write = write; //reference to fix unused parameter warning
   if (node->open != 0){
     return node->open(node);
   }
