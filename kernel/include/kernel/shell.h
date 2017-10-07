@@ -11,5 +11,6 @@
 
 void shell_initialize(void);
 void shell_run(void);
+void shell_putchar(char);
 
 #endif

@@ -1,4 +1,5 @@
 #include<kernel/tty.h>
+#include<kernel/shell.h>
 
 extern int seconds_passed;
 
@@ -19,4 +20,5 @@ int main_initialize(){
   //terminal_clearScreen(); 
   //shell_initialize();
   shell_run();
+  return 0;
 }

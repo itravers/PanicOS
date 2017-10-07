@@ -1,5 +1,8 @@
 #include <stdlib.h>
 
+#ifndef _REGS_H
+#define _REGS_H
+
 /* This defines what the stack looks like after an ISR was running */
 struct regs
 {
@@ -17,3 +20,4 @@ typedef struct registers
     u32int eip, cs, eflags, useresp, ss; // Pushed by the processor automatically.
 } registers_t;
 
+#endif
