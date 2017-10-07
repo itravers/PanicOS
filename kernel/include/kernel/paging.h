@@ -59,4 +59,11 @@ page_t *get_page(u32int address, int make, page_directory_t *dir);
 /* Handler for page faults. */
 void page_fault(struct regs* regs);
 
+/* Deallocates a previously allocated frame. */
+void free_frame(page_t*);
+
+/* Allocate a new frame. */
+void alloc_frame(page_t*, int, int);
+
+
 #endif
