@@ -17,6 +17,8 @@ size_t terminal_getColumn();
 void terminal_setRow(size_t row);
 void teminal_setColumn(size_t column);
 void terminal_setWelcomeScreen(void);
-
+void terminal_backspace(void);
+void terminal_newLine(void);
+void terminal_clearScreen(void);
 
 #endif

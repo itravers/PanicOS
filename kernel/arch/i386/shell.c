@@ -6,6 +6,11 @@
 
 #include<kernel/fs.h> //for list_fs
 #include<kernel/serial.h>
+#include<kernel/tty.h> //terminal_ functions
+
+#include <stdio.h> //for printf
+#include <stdlib.h> //for u32int datatypes
+#include <string.h> //for u32int datatypes
 
 char lastChar; /* The last character sent from keyboard to shell */
 char command_buf[256];
@@ -13,10 +18,14 @@ int buf_location = 0;
 char* command; /* The command parsed */
 
 extern int seconds_passed; /* From timer.c, the seconds passed since system boot, uptime*/
-extern int* memLoc; /* Location of beginning of memory. Defined in mm.c. */
+extern u32int memLoc; /* Location of beginning of memory. Defined in mm.c. */
 extern int memAmt; /* The amount of memory detected. Defined in mm.c */
 
 //extern char module;
+
+void process_command(void);
+void wait_for_command(void);
+void output_prompt(void);
 
 /* Start the shell. */
 void shell_initialize(void){
@@ -67,7 +76,7 @@ void process_command(){
     printf(" \t ls         : Lists the File System\n");
     printf(" \t startscreen: Shows the Start Screen");
   }else if(strcmp("mem", command) == 0){
-    printf(" Memory Location: 0x%x\n", memLoc);
+    printf(" Memory Location: 0x%x\n", (u32int) memLoc);
     printf(" Memory Amount  : 0x%x", memAmt);
   }else if(strcmp("ls", command) == 0){
     list_fs();
