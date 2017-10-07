@@ -1,5 +1,5 @@
 if [ -z "$1" ]; then
-  echo "No Arguments Supplied"
+  echo "No Arguments Supplied - First arg should be version #"
 else
   #update the Version in README.md
   sed -i 's/^Version.*/Version '"$1"'/' README.md
