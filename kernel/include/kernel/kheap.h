@@ -50,7 +50,7 @@ heap_t *create_heap(u32int start, u32int end, u32int max, u8int supervisor, u8in
 void *alloc(u32int size, u8int page_align, heap_t *heap);
 
 /* Releases a block allocated with 'alloc'. */
-void free(void *p, heap_t *heap);
+void free_kheap(void*, heap_t*);
 
 /* Allocate a chunk of memory, sz in size. If align == 1,
    the chunk must be page-aligned. If phys != 0, the physical

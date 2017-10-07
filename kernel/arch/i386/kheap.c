@@ -51,7 +51,7 @@ u32int kmalloc_int(u32int sz, int align, u32int *phys){
 
 /* Deallocates a previously allocated page from the kernel heap. */
 void kfree(void *p){
-  free(p, kheap);
+  free_kheap(p, kheap);
 }
 
 /* Allocates page aligned pages to the kernel heap. */
@@ -334,7 +334,7 @@ void *alloc(u32int size, u8int page_align, heap_t *heap){
 }
 
 /* Deallocates a given block of memory from a given heap. */
-void free(void *p, heap_t *heap){
+void free_kheap(void *p, heap_t *heap){
   // Exit gracefully for null pointers.
   if (p == 0){
     return;
