@@ -7,6 +7,7 @@
 
 #include <kernel/isrs.h>
 #include "regs.h"
+#include <stdio.h> //for puts
 
 /* Array of registered interrupt handlers. */
 void* interrupt_handlers[256];
