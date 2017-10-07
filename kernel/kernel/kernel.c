@@ -4,9 +4,27 @@
  * Responsible for initialzing the Kernel
  */
 
+/* Include Kernel Headers */
 #include <kernel/multiboot.h>
 #include <kernel/fs.h>
+#include <kernel/serial.h>
+#include <kernel/main.h>//For main_initialize
+#include <kernel/initrd.h> //For initrd_initialize
+#include <kernel/paging.h> //for paging_initialize
+#include <kernel/mm.h> //For mm_initialize
+#include <kernel/kb.h> //For keyboard_install
+#include <kernel/timer.h> //For timer_install
+#include <kernel/tty.h> //For terminal_initialize
+#include <kernel/irq.h> //For irq_install
+#include <kernel/isrs.h> //For isrs_install
+#include <kernel/idt.h> //For idt_install
+#include <kernel/gdt.h> //For gdt_install
+
+/* Include Standard Headers */
 #include <stdlib.h>
+#include <stdio.h> //For printf
+
+
 //#include <kernel/paging.h>
 
 /* Structure passed in by start.asm. Used to access bootloader info
@@ -45,21 +63,24 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
 	idt_install();
   isrs_install();
   irq_install();
+  serial_initialize(SERIAL_COM1_BASE);
   terminal_initialize();
   timer_install();
   keyboard_install();
+  //serial_write(SERIAL_COM1_BASE, 'h');
   mm_initialize(initrd_location);
+  printf("\nMultiboot Magic 0x%x", magic);
   printf("\nMultiboot Mods Loaded: %i", mbt->mods_count);//must be after terminal_init
 
   /* Make sure the initial ram disk is loaded (initrd) */
   ASSERT(mbt->mods_count > 0);
   
-  initialise_paging();
+  paging_initialize();
 
   //Initiaze the initial ramdisk (initrd) and set it as the filesystem root
-  fs_root = initialise_initrd(initrd_location);
+  fs_root = initrd_initialize(initrd_location);
 
-  printf("\nfs_root in init: 0x%x", fs_root);
+  printf("\nfs_root in init: 0x%x \n", (unsigned int)fs_root);
 /*//page fault testing
   printf("\nhello paging world!");
   u32int *ptr = (u32int*)0xA0000000;

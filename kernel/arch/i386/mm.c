@@ -8,19 +8,23 @@
 */
 
 #include <kernel/multiboot.h>
+#include <kernel/mm.h>
 #include <stdbool.h> //for bool type
 #include <stdlib.h> //for roundUp
 #include <stddef.h> //for size_t
+#include <stdio.h> //for printf
+
 
 /* The multiboot_info passed into kernel main */
 extern struct multiboot_info* mbt;
 
-/* &end is defined in linker.ld, it is the end of the kernel */
-extern void end;
-extern void code;
+/* end is defined in linker.ld, it is the end of the kernel 
+   we make these char[] instead of voids*/
+extern char end[];
+extern char code[];
 
 /* memLoc is a pointer to the beginning of physical memory as determined by multiboot */
-void* memLoc; 
+u32int memLoc; 
 
 /* The address where the kheap will be initialized 
  * Can't seem to declare this in kheap.c, get a const error */
@@ -33,7 +37,7 @@ int memAmt;
 int memUsable;
 
 /* memEndLoc is a pointer to the end of memory, as calculated in mm_initialze (memLoc+memAmt)*/
-void* memEndLoc;
+u32int memEndLoc;
 
 /* Initial RamDisk Location, end and size. */
 u32int initrd_location; //defined in kernel.c
@@ -47,7 +51,7 @@ typedef struct mm_header{
   size_t size;
   bool used;
   void* next;
-};
+}mm_header_t;
 
 /* Function prototypes */
 void* pAlloc(unsigned int);
@@ -58,16 +62,17 @@ void* pAlloc(unsigned int);
 void mm_initialize(u32int initrd_location){
   initrd_location = initrd_location;
   //Get the memory map from the multiboot_info
-  multiboot_memory_map_t* mmap = mbt->mmap_addr;
+  multiboot_memory_map_t* mmap = (multiboot_memory_map_t*)mbt->mmap_addr;
 
   //loop through the memory map for a usable (1) portion that is bigger than 0x1000000
-  while(mmap < mbt->mmap_addr + mbt->mmap_length) {
+  while((u32int)mmap < (mbt->mmap_addr + mbt->mmap_length)) {
     if(mmap->type == 1 && mmap->len > 0x1000000){
       //if found, save that memLoc and memAmt for later use
-      memLoc = (int*)mmap->addr;
+      memLoc = /*(u32int*)*/mmap->addr;
       memAmt = mmap->len;
     }
     mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(mmap->size) );
+   // mmap = (multiboot_memory_map_t) ( (unsigned int)mmap + mmap.size + sizeof(mmap.size) );
   }
 
   /* Calculate the initrd (ramdisk size) */
@@ -75,13 +80,14 @@ void mm_initialize(u32int initrd_location){
   initrd_size = initrd_end - initrd_location;
 
   /* Only used to display the start location of Ram, then promptly forgotten */
-  void* startOfRam = memLoc;
+  u32int startOfRam = memLoc;
 
   /* Calculate a pointer to the end of physical memory. */
   memEndLoc = memLoc + memAmt;
 
+
   /* Add the size of the kernel to memLoc at the nearest 4kb boundry */
-  memLoc += roundUp(&end - &code, 4096); 
+  memLoc += roundUp(end - code, 4096); 
 
   /* Add the size of the initrd to memLoc at the nearest 4kb boundry */
   memLoc += roundUp(initrd_size, 4096); 
@@ -90,17 +96,18 @@ void mm_initialize(u32int initrd_location){
   /* Calculate the amount of memory that is usable for heap allocation after kernel*/
   memUsable = memEndLoc - memLoc;
 
-  printf("\nEnd of Kernel           : 0x%x", &end);
-  printf("\nStart of Kernel         : 0x%x", &code);
-  printf("\nSize of Kernel          : 0x%x", (&end - &code));
+  printf("\nEnd of Kernel           : 0x%x", (u32int) end);
+  printf("\nStart of Kernel         : 0x%x", (u32int) code);
+  printf("\nSize of Kernel          : 0x%x", (u32int)(end - code));
 
-  printf("\nMemory Found At Location: 0x%x", startOfRam);
+  printf("\nMemory Found At Location: 0x%x", (u32int) startOfRam);
   printf("\nMemory Amount Located   : 0x%x", memAmt);
-  printf("\nEnd of Physical Memory : 0x%x", memEndLoc);
+  printf("\nEnd of Physical Memory : 0x%x", (u32int) memEndLoc);
   printf("\nInitrd Starts At       : 0x%x", initrd_location);
   printf("\nInitrd Ends At         : 0x%x", initrd_end);
-  printf("\nInitrd Size            : 0x%x", initrd_size);
-  printf("\nUsable Memory Starts At: 0x%x", memLoc);
+  printf("\nInitrd Size            : 0x%x",  initrd_size);
+  printf("\nUsable Memory Starts At: 0x%x", (u32int) memLoc);
   printf("\nUsable Amount of Memory: 0x%x", memUsable);
-  placement_address = memLoc;
+  placement_address = (u32int)memLoc;
+  //while(1);
 }

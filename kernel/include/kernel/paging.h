@@ -45,7 +45,7 @@ typedef struct page_directory{
 
 /* Sets up the environment, page directories etc and
    enables paging. */
-void initialise_paging();
+void paging_initialize();
 
 /* Causes the specified page directory to be loaded into the
    CR3 register. */
@@ -58,5 +58,12 @@ page_t *get_page(u32int address, int make, page_directory_t *dir);
 
 /* Handler for page faults. */
 void page_fault(struct regs* regs);
+
+/* Deallocates a previously allocated frame. */
+void free_frame(page_t*);
+
+/* Allocate a new frame. */
+void alloc_frame(page_t*, int, int);
+
 
 #endif

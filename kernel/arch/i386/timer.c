@@ -6,8 +6,11 @@
  * Based on osdev barebones tutorial
  */
 
+#include <kernel/timer.h>
+#include <kernel/irq.h> //for irq_install_handler
+
 /* The number of times timer_handler has been called since kernel booted. */
-int timer_ticks = 0;
+unsigned int timer_ticks = 0;
 
 /* The number of seconds that have passed since the kernel booted. */
 int seconds_passed = 0;
@@ -17,6 +20,8 @@ int seconds_passed = 0;
    timer fires. By default, the timer fires 18.222 times
    per second. */
 void timer_handler(struct regs *r){
+  r = r; //get rid of nonuse compiler warning
+
   /* Increment our 'tick count' */
   timer_ticks++;
 

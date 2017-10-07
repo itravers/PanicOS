@@ -31,7 +31,7 @@ u32int kmalloc_int(u32int sz, int align, u32int *phys){
     void *addr = alloc(sz, (u8int)align, kheap);
     if (phys != 0){
       page_t *page = get_page((u32int)addr, 0, kernel_directory);
-      *phys = page->frame*0x1000 + (u32int)addr&0xFFF;
+      *phys = (page->frame*0x1000 + ((u32int)addr&0xFFF));
     }
     return (u32int)addr;
   }else{
@@ -51,7 +51,7 @@ u32int kmalloc_int(u32int sz, int align, u32int *phys){
 
 /* Deallocates a previously allocated page from the kernel heap. */
 void kfree(void *p){
-  free(p, kheap);
+  free_kheap(p, kheap);
 }
 
 /* Allocates page aligned pages to the kernel heap. */
@@ -80,7 +80,7 @@ static void expand(u32int new_size, heap_t *heap){
   ASSERT(new_size > heap->end_address - heap->start_address);
 
   // Get the nearest following page boundary.
-  if (new_size&0xFFFFF000 != 0){
+  if ((new_size&0xFFFFF000) != 0){
     new_size &= 0xFFFFF000;
     new_size += 0x1000;
   }
@@ -141,7 +141,7 @@ static s32int find_smallest_hole(u32int size, u8int page_align, heap_t *heap){
       // Page-align the starting point of this header.
       u32int location = (u32int)header;
       s32int offset = 0;
-      if((location+sizeof(header_t) & 0xFFFFF000) != 0){
+      if(((location+sizeof(header_t)) & 0xFFFFF000) != 0){
         offset = 0x1000 /* page size */  - (location+sizeof(header_t))%0x1000;
       }
       s32int hole_size = (s32int)header->size - offset;
@@ -190,7 +190,7 @@ heap_t *create_heap(u32int start, u32int end_addr, u32int max, u8int supervisor,
   start += sizeof(type_t)*HEAP_INDEX_SIZE;
 
   // Make sure the start address is page-aligned.
-  if (start & 0xFFFFF000 != 0){
+  if ((start & 0xFFFFF000) != 0){
     start &= 0xFFFFF000;
     start += 0x1000;
   }
@@ -239,7 +239,7 @@ void *alloc(u32int size, u8int page_align, heap_t *heap){
        
     // Vars to hold the index of, and value of, the endmost header found so far.
     u32int idx = -1; u32int value = 0x0;
-    while(iterator < heap->index.size){
+    while(iterator < (s32int)heap->index.size){
       u32int tmp = (u32int)lookup_ordered_array(iterator, &heap->index);
       if(tmp > value){
         value = tmp;
@@ -249,7 +249,7 @@ void *alloc(u32int size, u8int page_align, heap_t *heap){
     }
 
     // If we didn't find ANY headers, we need to add one.
-    if(idx == -1){
+    if(idx == (u32int)-1){
       header_t *header = (header_t *)old_end_address;
       header->magic = HEAP_MAGIC;
       header->size = new_length - old_length;
@@ -334,7 +334,7 @@ void *alloc(u32int size, u8int page_align, heap_t *heap){
 }
 
 /* Deallocates a given block of memory from a given heap. */
-void free(void *p, heap_t *heap){
+void free_kheap(void *p, heap_t *heap){
   // Exit gracefully for null pointers.
   if (p == 0){
     return;

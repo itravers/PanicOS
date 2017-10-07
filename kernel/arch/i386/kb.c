@@ -7,6 +7,8 @@
 
 /* Included so we can send key pressed to the shell. */
 #include <kernel/shell.h>
+#include <kernel/irq.h>
+#include <stdlib.h> //for inb
 
 /* KBDUS means US Keyboard Layout. This is a scancode
    table used to layout a standard US keyboard. */
@@ -104,11 +106,12 @@ unsigned char kbdus[128] = {
 };
 
 /* Handles the keyboard interrupt */
-void keyboard_handler(struct regs *r){
+void keyboard_handler(struct regs* r){
   unsigned char scancode;
-
+  r = r;
   /* Read from the keyboard's data buffer */
-  scancode = inportb(0x60);
+  //scancode = inportb(0x60);
+  scancode = inb(0x60);
 
   /* If the top bit of the byte we read from the keyboard is
      set, that means that a key has just been released */

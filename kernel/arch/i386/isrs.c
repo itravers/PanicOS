@@ -5,7 +5,10 @@
  * Based on Brans Kernel Development Tutorial
  */
 
+#include <kernel/isrs.h>
+#include <kernel/idt.h> //for idt_set_gate
 #include "regs.h"
+#include <stdio.h> //for puts
 
 /* Array of registered interrupt handlers. */
 void* interrupt_handlers[256];
@@ -133,7 +136,8 @@ char *exception_messages[] = {
 };
 
 /* Register a function as an interrupt handler, for interrupt num n. */
-void register_interrupt_handler(int n, void(*handler)(struct regs *r)){
+//void register_interrupt_handler(int n, void(*handler)(struct regs *r)){
+void register_interrupt_handler(int n, handler handler){
   interrupt_handlers[n] = handler;
 }
 

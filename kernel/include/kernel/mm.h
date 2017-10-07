@@ -6,6 +6,9 @@
 #ifndef _MM_H
 #define _MM_H
 
-void mm_initialize(void);
+#include <stddef.h>
+#include <stdlib.h> //for u32int
+
+void mm_initialize(u32int);
 
 #endif

@@ -1,6 +1,6 @@
 PanicOS - A Hobby Operating System
 ==================================
-Version 0.0.3
+Version 0.0.4
 
 <p align="center">
    <img src="https://i.imgur.com/6vBowK0.png" width="540" height="300" alt="PanicOS Screenshot"></img>
@@ -45,6 +45,7 @@ Features
 * Simple Memory Management
 * Paging
 * Initial Ramdisk Setup and Working (initrd)
+* Basic Serial Driver for debugging purposes
    
 Download PanicOS
 ----------------

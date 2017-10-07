@@ -7,6 +7,10 @@
  */
 #include <kernel/paging.h>
 #include <kernel/kheap.h>
+#include <kernel/isrs.h> //for register_interrupt_hander
+
+#include <stdio.h> //for printf
+#include <string.h> //for memset
 
 /* The kernel's page directory. */
 page_directory_t *kernel_directory=0;
@@ -27,7 +31,7 @@ extern u32int placement_address;
 extern heap_t *kheap;
 
 /* defined in mm.c - The amount of memory usable for allocation, after the kernel. */
-extern memUsable;
+extern int memUsable;
 
 /* Macros used in the bitset algorithms. */
 #define INDEX_FROM_BIT(a) (a/(8*4))
@@ -50,12 +54,12 @@ static void clear_frame(u32int frame_addr){
 }
 
 /* Tests if a Frame at frame_address is set in the frames[] bitset. */
-static u32int test_frame(u32int frame_addr){
+/*static u32int test_frame(u32int frame_addr){
   u32int frame = frame_addr/0x1000;
   u32int idx = INDEX_FROM_BIT(frame);
   u32int off = OFFSET_FROM_BIT(frame);
   return (frames[idx] & (0x1 << off));
-}
+}*/
 
 /* Returns index of the first unused frame in the frame[] bitset. */
 static u32int first_frame(){
@@ -71,6 +75,7 @@ static u32int first_frame(){
       }
     }
   }
+  return -1;
 }
 
 /* Allocate a new frame */
@@ -103,7 +108,7 @@ void free_frame(page_t *page){
 }
 
 /* Initializes the paging system. */
-void initialise_paging(){
+void paging_initialize(){
   //Calculated the number of frames available based on the amound of memUsable
   nframes = memUsable / 0x1000;
   frames = (u32int*)kmalloc(INDEX_FROM_BIT(nframes));
@@ -119,7 +124,7 @@ void initialise_paging(){
      to be created where necessary. We can't allocate frames yet because they
      they need to be identity mapped first below, and yet we can't increase
      placement_address between identity mapping and enabling the heap! */
-  int i = 0;
+  unsigned int i = 0;
   for (i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000){
     get_page(i, 1, kernel_directory);
   }
@@ -201,6 +206,7 @@ void page_fault(struct regs* regs){
   int us = regs->err_code & 0x4;           // Processor was in user-mode?
   int reserved = regs->err_code & 0x8;     // Overwritten CPU-reserved bits of page entry?
   int id = regs->err_code & 0x10;          // Caused by an instruction fetch?
+  id = id;
 
   // Output an error message.
   printf("\nPage fault! ( ");

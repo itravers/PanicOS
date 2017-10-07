@@ -8,3 +8,4 @@
 *.h~
 sysroot/
 isodir/
+serial.log

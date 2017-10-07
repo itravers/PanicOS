@@ -6,6 +6,10 @@
 
 #include <stdlib.h>
 
+/* Test running a module from the fs. */
+//typedef void (*call_module_t)(void);
+//char module[256];
+
 #define FS_FILE        0x01
 #define FS_DIRECTORY   0x02
 #define FS_CHARDEVICE  0x03
@@ -62,5 +66,8 @@ void close_fs(fs_node_t *node);
 struct dirent *readdir_fs(fs_node_t *node, u32int index);
 fs_node_t *finddir_fs(fs_node_t *node, char *name);
 void list_fs(void);
+
+/* Finds a file & returns it's contents in a character array */
+//void 
 
 #endif
