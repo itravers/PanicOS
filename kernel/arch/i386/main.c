@@ -4,7 +4,7 @@ extern int seconds_passed;
 
 int main_initialize(){
 
-   while(seconds_passed < 2){
+   while(seconds_passed < 3){
     terminal_getRow();
   }
   //print the welcome screen for 2 seconds and then display a prompt
@@ -13,7 +13,7 @@ int main_initialize(){
 
 
  // shell_initialize();
-  while(seconds_passed < 2){
+  while(seconds_passed < 3){
     terminal_getRow();
   }
   //terminal_clearScreen(); 
