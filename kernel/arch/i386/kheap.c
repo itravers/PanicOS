@@ -239,7 +239,7 @@ void *alloc(u32int size, u8int page_align, heap_t *heap){
        
     // Vars to hold the index of, and value of, the endmost header found so far.
     u32int idx = -1; u32int value = 0x0;
-    while(iterator < heap->index.size){
+    while(iterator < (s32int)heap->index.size){
       u32int tmp = (u32int)lookup_ordered_array(iterator, &heap->index);
       if(tmp > value){
         value = tmp;
@@ -249,7 +249,7 @@ void *alloc(u32int size, u8int page_align, heap_t *heap){
     }
 
     // If we didn't find ANY headers, we need to add one.
-    if(idx == -1){
+    if(idx == (u32int)-1){
       header_t *header = (header_t *)old_end_address;
       header->magic = HEAP_MAGIC;
       header->size = new_length - old_length;
