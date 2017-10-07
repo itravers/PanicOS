@@ -10,6 +10,7 @@
 #include <kernel/isrs.h> //for register_interrupt_hander
 
 #include <stdio.h> //for printf
+#include <string.h> //for memset
 
 /* The kernel's page directory. */
 page_directory_t *kernel_directory=0;
@@ -30,7 +31,7 @@ extern u32int placement_address;
 extern heap_t *kheap;
 
 /* defined in mm.c - The amount of memory usable for allocation, after the kernel. */
-extern memUsable;
+extern int memUsable;
 
 /* Macros used in the bitset algorithms. */
 #define INDEX_FROM_BIT(a) (a/(8*4))
@@ -83,7 +84,7 @@ void alloc_frame(page_t *page, int is_kernel, int is_writeable){
     return;
   }else{
     u32int idx = first_frame();
-    if (idx == (u32int)-1 || idx == -1){
+    if (idx == (u32int)-1){
       // PANIC! no free frames!!
       PANIC("NO Free Frames!");
     }
@@ -123,7 +124,7 @@ void paging_initialize(){
      to be created where necessary. We can't allocate frames yet because they
      they need to be identity mapped first below, and yet we can't increase
      placement_address between identity mapping and enabling the heap! */
-  int i = 0;
+  unsigned int i = 0;
   for (i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000){
     get_page(i, 1, kernel_directory);
   }
