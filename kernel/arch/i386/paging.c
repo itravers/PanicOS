@@ -118,6 +118,8 @@ void paging_initialize(){
   kernel_directory = (page_directory_t*)kmalloc_a(sizeof(page_directory_t));
   memset(kernel_directory, 0, sizeof(page_directory_t));
   current_directory = kernel_directory;
+  printf("\nsizeof page_directory_t %i", sizeof(page_directory_t));
+  printf("\nsizeof page_t %i", sizeof(page_t));
 
   /* Map some pages in the kernel heap area.
      Here we call get_page but not alloc_frame. This causes page_table_t's 
@@ -126,6 +128,12 @@ void paging_initialize(){
      placement_address between identity mapping and enabling the heap! */
   unsigned int i = 0;
   for (i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000){
+    if(i == KHEAP_START){
+      page_t* firstPageAddress = get_page(i, 1, kernel_directory);
+      printf("\nfirst page Address: 0x%x", firstPageAddress);
+      printf("\nfirst page content: 0x%x", *firstPageAddress);
+      printf("\npage->present: 0x%x", firstPageAddress->present);
+    }
     get_page(i, 1, kernel_directory);
   }
 
@@ -153,6 +161,7 @@ void paging_initialize(){
   // Before we enable paging, we must register our page fault handler.
   register_interrupt_handler(14, page_fault);
 
+  
   // Now, enable paging!
   switch_page_directory(kernel_directory);
 
@@ -162,12 +171,20 @@ void paging_initialize(){
 
 /* Switch the top level page directory to a new one. */
 void switch_page_directory(page_directory_t *dir){
+  printf("\nswitch_page_directory");
+  printf("\ndir: 0x%x", dir);
+  printf("\n &dir->tablesPhysical: 0x%x", &dir->tablesPhysical);
+  printf("\n &dir->physicalAddr: 0x%x", &dir->physicalAddr);
+  printf("\n &dir->tables[0]: 0x%x", &dir->tables[0]);
   current_directory = dir;
   asm volatile("mov %0, %%cr3":: "r"(&dir->tablesPhysical));
   u32int cr0;
   asm volatile("mov %%cr0, %0": "=r"(cr0));
   cr0 |= 0x80000000; // Enable paging!
   asm volatile("mov %0, %%cr0":: "r"(cr0));
+  printf("\nafter paging, dir: 0x%x", dir);
+  printf("\nkheap: 0x%x", &kheap);
+  printf("\nplacement_address: x%x", placement_address);
 }
 
 /* Get a page from a page directory
@@ -187,6 +204,7 @@ page_t *get_page(u32int address, int make, page_directory_t *dir){
     u32int tmp;
     dir->tables[table_idx] = (page_table_t*)kmalloc_ap(sizeof(page_table_t), &tmp);
     dir->tablesPhysical[table_idx] = tmp | 0x7; // PRESENT, RW, US.
+    printf("\n &dir->tablesPhysical[0]: 0x%x:", &dir->tablesPhysical[0]);
     return &dir->tables[table_idx]->pages[address%1024];
   }else{
     return 0;
@@ -214,8 +232,28 @@ void page_fault(struct regs* regs){
   if (rw) {printf("read-only ");}
   if (us) {printf("user-mode ");}
   if (reserved) {printf("reserved ");}
-  printf(") at 0x");
+  printf(")\n at 0x");
   printf("%x", faulting_address);
   printf("\n");
+  
+  if(!present && !rw && !us){
+    printf("\nSupervisory process tried to read a non-present page entry.");
+  }else if(!present && !rw && us){
+    printf("\nSupervisory process tried to read a page and cause a protection fault.");
+  }else if(!present && rw && !us){
+    printf("\nSupervisory process tried to write to a non-present page entry.");
+  }else if(!present && rw && us){
+    printf("\nSupervisory process tried to write a page and caused a protection fault.");
+  }else if(present && !rw && !us){
+    printf("\nUser Process tried to read a non-present page entry.");
+  }else if(present && !rw && us){
+    printf("\nUser process tried to read a page and caused a protection fault.");
+  }else if(present && rw && !us){
+    printf("\nUer process tried to write to a non-present page entry.");
+  }else if(present && rw && us){
+    printf("\nUser process tried to write a page and caused a protection fault.");
+  }
+  printf("\n"); 
+ 
   PANIC("Page fault");
 }

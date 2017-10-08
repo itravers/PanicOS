@@ -11,7 +11,7 @@
 #include <kernel/paging.h>
 
 /* The beginning of memory. Defined in mm.c. */
-extern u32int* memLoc;
+//extern u32int* memLoc;
 
 /* Address where free memory starts at the end of the kernel. Defined in mm.c. */
 extern u32int placement_address;
