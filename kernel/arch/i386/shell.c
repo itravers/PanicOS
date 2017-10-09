@@ -67,7 +67,7 @@ void process_command(){
   if(strcmp("cls", command) == 0){
     terminal_clearScreen();//cls clears the screen
   }else if(strcmp("uptime", command) == 0){
-    printf(" Uptime: %i Seconds", seconds_passed);//prints uptime in seconds
+    printf(" Uptime: %x Seconds", seconds_passed);//prints uptime in seconds
   }else if(strcmp("help", command) == 0){
     printf(" Possible Commands:\n");
     printf(" \t help       : Show this list \n");

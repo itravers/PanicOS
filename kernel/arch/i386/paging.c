@@ -111,13 +111,14 @@ void free_frame(page_t *page){
 void paging_initialize(){
   //Calculated the number of frames available based on the amound of memUsable
   nframes = memUsable / 0x1000;
-  frames = (u32int*)kmalloc(INDEX_FROM_BIT(nframes));
+  frames = (u32int*)kmalloc_a(INDEX_FROM_BIT(nframes));
   memset(frames, 0, INDEX_FROM_BIT(nframes));
     
   // Create the top level page directory
   kernel_directory = (page_directory_t*)kmalloc_a(sizeof(page_directory_t));
   memset(kernel_directory, 0, sizeof(page_directory_t));
   current_directory = kernel_directory;
+  printf("\nkernel_directory: 0x%x", kernel_directory);
   printf("\nsizeof page_directory_t %i", sizeof(page_directory_t));
   printf("\nsizeof page_t %i", sizeof(page_t));
 
@@ -147,8 +148,10 @@ void paging_initialize(){
      Allocate a lil' bit extra so the kernel heap can be
      initialised properly. */
   i = 0;
-  while (i < placement_address+0x1000){
+  printf("\nIdentity mapping to: 0x%x", placement_address);
     // Kernel code is readable but not writeable from userspace.
+  while (i < placement_address+0x1000){
+  //while (i < 1024*1024){
     alloc_frame( get_page(i, 1, kernel_directory), 0, 0);
     i += 0x1000;
   }
@@ -165,6 +168,7 @@ void paging_initialize(){
   // Now, enable paging!
   switch_page_directory(kernel_directory);
 
+
   // Initialise the kernel heap.
   kheap = create_heap(KHEAP_START, KHEAP_START+KHEAP_INITIAL_SIZE, 0xCFFFF000, 0, 0);
 }
@@ -172,7 +176,6 @@ void paging_initialize(){
 /* Switch the top level page directory to a new one. */
 void switch_page_directory(page_directory_t *dir){
   printf("\nswitch_page_directory");
-  printf("\ndir: 0x%x", dir);
   printf("\n &dir->tablesPhysical: 0x%x", &dir->tablesPhysical);
   printf("\n &dir->physicalAddr: 0x%x", &dir->physicalAddr);
   printf("\n &dir->tables[0]: 0x%x", &dir->tables[0]);

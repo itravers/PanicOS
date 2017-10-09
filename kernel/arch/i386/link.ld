@@ -1,4 +1,5 @@
-OUTPUT_FORMAT("binary")
+/* OUTPUT_FORMAT("binary")*/
+OUTPUT_FORMAT("elf32-i386");
 ENTRY(start)
 physz = 0x00100000;
 SECTIONS

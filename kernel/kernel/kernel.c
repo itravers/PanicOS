@@ -79,7 +79,9 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
 
   //Initiaze the initial ramdisk (initrd) and set it as the filesystem root
   fs_root = initrd_initialize(initrd_location);
+ 
 
+  printf("\ninitrd_location: 0x%x \n", (unsigned int)initrd_location);
   printf("\nfs_root in init: 0x%x \n", (unsigned int)fs_root);
 /*//page fault testing
   printf("\nhello paging world!");
