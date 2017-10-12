@@ -11,6 +11,7 @@
 #include <kernel/main.h>//For main_initialize
 #include <kernel/initrd.h> //For initrd_initialize
 #include <kernel/paging.h> //for paging_initialize
+#include <kernel/task.h> //for tasking_initialize
 #include <kernel/mm.h> //For mm_initialize
 #include <kernel/kb.h> //For keyboard_install
 #include <kernel/timer.h> //For timer_install
@@ -81,12 +82,15 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
   /* Make sure the initial ram disk is loaded (initrd) */
   ASSERT(mbt->mods_count > 0);
   
+  /* Start Paging */
   paging_initialize();
+
+  /* Start multitasking */
+ // tasking_initialize();
+  
 
   //Initiaze the initial ramdisk (initrd) and set it as the filesystem root
   fs_root = initrd_initialize(initrd_location);
- 
-
   printf("\ninitrd_location: 0x%x \n", (unsigned int)initrd_location);
   printf("\nfs_root in init: 0x%x \n", (unsigned int)fs_root);
 /*//page fault testing
@@ -95,6 +99,14 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
    u32int do_page_fault = *ptr;
   printf("\n0x%x", do_page_fault);
 */
+
+/*Tasking testing
+  int ret = fork();
+  printf("\nfork() returned: %i", ret);
+  printf("\ngetpid() returned: %i", getpid());
+  printf("\n==========================================");
+*/
+
    __asm__ __volatile__ ("sti");  //Enable Interrupts
   main_initialize();
     for (;;);
