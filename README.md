@@ -46,6 +46,7 @@ Features
 * Paging
 * Initial Ramdisk Setup and Working (initrd)
 * Basic Serial Driver for debugging purposes
+* Basic Multi-Tasking (fork() works)
    
 Download PanicOS
 ----------------

@@ -93,6 +93,7 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
   fs_root = initrd_initialize(initrd_location);
   printf("\ninitrd_location: 0x%x \n", (unsigned int)initrd_location);
   printf("\nfs_root in init: 0x%x \n", (unsigned int)fs_root);
+
 /*//page fault testing
   printf("\nhello paging world!");
   u32int *ptr = (u32int*)0xA0000000;
@@ -107,7 +108,6 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
   printf("\ngetpid() returned: %i", pid);
   printf("\n==========================================");
 */
-
 
   asm volatile("sti");
    __asm__ __volatile__ ("sti");  //Enable Interrupts
