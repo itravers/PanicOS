@@ -32,6 +32,10 @@
 struct multiboot_info* mbt;
 u32int initrd_location;
 
+/*Passed in by start.asm. Tells us the physical location
+  of the initial stack. */
+unsigned int initial_esp;
+
 /**
  * Reads a single byte from an 8-bit port
  */
@@ -53,8 +57,9 @@ void outportb (unsigned short _port, unsigned char _data){
  * Input: mbtt - Info passed into kernel from bootloader
  *        defined in multiboot.h
  */
-int main(struct multiboot_info* mbtt, unsigned int magic){
+int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_stack){
   mbt = mbtt; //we access mbt in mm.c
+  initial_esp = initial_stack; //provide the location of the initial stack pointer
 
   /* Find the initrd location from mbt */
   initrd_location = *((u32int*)mbt->mods_addr);
@@ -71,6 +76,7 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   mm_initialize(initrd_location);
   printf("\nMultiboot Magic 0x%x", magic);
   printf("\nMultiboot Mods Loaded: %i", mbt->mods_count);//must be after terminal_init
+  printf("\nInitial Stack: 0x%x", initial_esp);
 
   /* Make sure the initial ram disk is loaded (initrd) */
   ASSERT(mbt->mods_count > 0);

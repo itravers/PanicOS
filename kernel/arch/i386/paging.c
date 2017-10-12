@@ -179,8 +179,8 @@ void paging_initialize(){
 
   //Added for multitasking, clone kernel_directory page dir, and switch to the clone
   current_directory = clone_directory(kernel_directory);
-    printf("\nkernel_directory: 0x%x", kernel_directory->physicalAddr);
-    printf("\ncurrent_directory: 0x%x\n", current_directory->physicalAddr);
+//    printf("\nkernel_directory: 0x%x", kernel_directory->physicalAddr);
+//    printf("\ncurrent_directory: 0x%x\n", current_directory->physicalAddr);
   switch_page_directory(current_directory);
 
 }
@@ -316,6 +316,7 @@ page_directory_t* clone_directory(page_directory_t* src){
       //this page table exists as part of the kernel, we link it by using the same pointer
       dir->tables[i] = src->tables[i];
       dir->tablesPhysical[i] = src->tablesPhysical[i];
+      //printf("clone directory is kernel_dir");
     }else{//else we copy the page
       u32int phys;
       dir->tables[i] = clone_table(src->tables[i], &phys);
@@ -328,6 +329,8 @@ page_directory_t* clone_directory(page_directory_t* src){
 
 /* Clones a page table. */
 page_table_t* clone_table(page_table_t* src, u32int* physAddr){
+  printf("\nclone_table");
+
   //create a new page table that is page aligned
   page_table_t* table = (page_table_t*)kmalloc_ap(sizeof(page_table_t), physAddr);
 
@@ -339,6 +342,7 @@ page_table_t* clone_table(page_table_t* src, u32int* physAddr){
   for(int i = 0; i < 1024; i++){
     //if the src entry is 0, we don't need to do anything, as we already memset every location to 0
     if(!src->pages[i].frame){//this is different in tutorial src, vs examples
+      printf("\nclone_table frame is 0");
       continue;
     }
 
