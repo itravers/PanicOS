@@ -1,5 +1,5 @@
-/* OUTPUT_FORMAT("binary") changed to allow gdb debugging*/
-OUTPUT_FORMAT("elf32-i386");
+OUTPUT_FORMAT("binary") /*changed to allow gdb debugging*/
+/*OUTPUT_FORMAT("elf32-i386");*/
 ENTRY(start)
 physz = 0x00100000;
 SECTIONS
