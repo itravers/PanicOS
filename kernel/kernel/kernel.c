@@ -11,6 +11,7 @@
 #include <kernel/main.h>//For main_initialize
 #include <kernel/initrd.h> //For initrd_initialize
 #include <kernel/paging.h> //for paging_initialize
+#include <kernel/task.h> //for tasking_initialize
 #include <kernel/mm.h> //For mm_initialize
 #include <kernel/kb.h> //For keyboard_install
 #include <kernel/timer.h> //For timer_install
@@ -31,6 +32,10 @@
    We use this in mm.c to find the location of usable memory. */
 struct multiboot_info* mbt;
 u32int initrd_location;
+
+/*Passed in by start.asm. Tells us the physical location
+  of the initial stack. */
+unsigned int initial_esp;
 
 /**
  * Reads a single byte from an 8-bit port
@@ -53,8 +58,9 @@ void outportb (unsigned short _port, unsigned char _data){
  * Input: mbtt - Info passed into kernel from bootloader
  *        defined in multiboot.h
  */
-int main(struct multiboot_info* mbtt, unsigned int magic){
+int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_stack){
   mbt = mbtt; //we access mbt in mm.c
+  initial_esp = initial_stack; //provide the location of the initial stack pointer
 
   /* Find the initrd location from mbt */
   initrd_location = *((u32int*)mbt->mods_addr);
@@ -71,22 +77,39 @@ int main(struct multiboot_info* mbtt, unsigned int magic){
   mm_initialize(initrd_location);
   printf("\nMultiboot Magic 0x%x", magic);
   printf("\nMultiboot Mods Loaded: %i", mbt->mods_count);//must be after terminal_init
+  printf("\nInitial Stack: 0x%x", initial_esp);
 
   /* Make sure the initial ram disk is loaded (initrd) */
   ASSERT(mbt->mods_count > 0);
   
+  /* Start Paging */
   paging_initialize();
+
+  /* Start multitasking */
+  tasking_initialize();
+  
 
   //Initiaze the initial ramdisk (initrd) and set it as the filesystem root
   fs_root = initrd_initialize(initrd_location);
-
+  printf("\ninitrd_location: 0x%x \n", (unsigned int)initrd_location);
   printf("\nfs_root in init: 0x%x \n", (unsigned int)fs_root);
+
 /*//page fault testing
   printf("\nhello paging world!");
   u32int *ptr = (u32int*)0xA0000000;
    u32int do_page_fault = *ptr;
   printf("\n0x%x", do_page_fault);
 */
+
+/*Tasking testing
+  int ret = fork();
+  int pid = getpid();
+  printf("\nfork() returned: %i", ret);
+  printf("\ngetpid() returned: %i", pid);
+  printf("\n==========================================");
+*/
+
+  asm volatile("sti");
    __asm__ __volatile__ ("sti");  //Enable Interrupts
   main_initialize();
     for (;;);

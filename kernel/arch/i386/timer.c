@@ -8,6 +8,7 @@
 
 #include <kernel/timer.h>
 #include <kernel/irq.h> //for irq_install_handler
+#include <kernel/timer.h> //for switch_task
 
 /* The number of times timer_handler has been called since kernel booted. */
 unsigned int timer_ticks = 0;
@@ -24,6 +25,11 @@ void timer_handler(struct regs *r){
 
   /* Increment our 'tick count' */
   timer_ticks++;
+
+//  printf("\ntimer1");
+  //switch tasks from task.c
+  switch_task(r);
+//  printf("\ntimer2");
 
   /* Every 18 clocks (approximately 1 second), we will
      increment seconds_passed */

@@ -154,6 +154,7 @@ void fault_handler(struct regs *r){
   if(interrupt_handlers[r->int_no] != 0){
    handler = interrupt_handlers[r->int_no];
    handler(r);
+   //printf("isrs handler for r->int_no= %i done", r->int_no);
   }
     
   if(r->int_no < 32){

@@ -65,5 +65,7 @@ void free_frame(page_t*);
 /* Allocate a new frame. */
 void alloc_frame(page_t*, int, int);
 
+/* Makes a copy of a page directory. */
+page_directory_t *clone_directory(page_directory_t *src);
 
 #endif

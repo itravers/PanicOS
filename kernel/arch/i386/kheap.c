@@ -7,11 +7,12 @@
 
 #include <stdlib.h>
 #include <stddef.h>
+#include <string.h>
 #include <kernel/kheap.h>
 #include <kernel/paging.h>
 
 /* The beginning of memory. Defined in mm.c. */
-extern u32int* memLoc;
+//extern u32int* memLoc;
 
 /* Address where free memory starts at the end of the kernel. Defined in mm.c. */
 extern u32int placement_address;
@@ -32,7 +33,7 @@ u32int kmalloc_int(u32int sz, int align, u32int *phys){
     if (phys != 0){
       page_t *page = get_page((u32int)addr, 0, kernel_directory);
       *phys = (page->frame*0x1000 + ((u32int)addr&0xFFF));
-    }
+    } 
     return (u32int)addr;
   }else{
     if (align == 1 && (placement_address & 0xFFFFF000)){
@@ -76,6 +77,7 @@ u32int kmalloc(u32int sz){
 
 /* Expands the size of a given heap. */
 static void expand(u32int new_size, heap_t *heap){
+  //printf("\nexpanding kheap to 0x%x \n", new_size);
   // Sanity check. Make sure the expanded size is available in the heap area.
   ASSERT(new_size > heap->end_address - heap->start_address);
 
@@ -141,7 +143,7 @@ static s32int find_smallest_hole(u32int size, u8int page_align, heap_t *heap){
       // Page-align the starting point of this header.
       u32int location = (u32int)header;
       s32int offset = 0;
-      if(((location+sizeof(header_t)) & 0xFFFFF000) != 0){
+      if((location+sizeof(header_t) & 0xFFFFF000) != 0){
         offset = 0x1000 /* page size */  - (location+sizeof(header_t))%0x1000;
       }
       s32int hole_size = (s32int)header->size - offset;
@@ -231,6 +233,7 @@ void *alloc(u32int size, u8int page_align, heap_t *heap){
     u32int old_end_address = heap->end_address;
 
     // We need to allocate some more space.
+    //printf("\n lets expand kheap by 0x%x", new_size);
     expand(old_length+new_size, heap);
     u32int new_length = heap->end_address-heap->start_address;
 

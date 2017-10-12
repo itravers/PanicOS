@@ -42,6 +42,8 @@ mboot:
 ; will insert an 'extern _main', followed by 'call _main', right
 ; before the 'jmp $'.
 stublet:
+    ;push the location of the initial stack
+    push esp
     ;push the incoming multiboot headers
     push eax
     push ebx 
