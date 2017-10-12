@@ -290,20 +290,25 @@ void page_fault(struct regs* regs){
 
 /* makes a copy of a page directory. */
 page_directory_t* clone_directory(page_directory_t* src){
+  //printf("\nclone_directory() 1");
   //First off we need to create a new directory. Use kmalloc_ap to
   //obtain an address aligned on a page boundry, and to retrieve
   //it's physical address. Then ensure it is completely blank
   
   u32int phys;
   
+  //printf("\nclone_directory() 2");
   //Make a new directory & get its physical address
   page_directory_t* dir = (page_directory_t*)kmalloc_ap(sizeof(page_directory_t), &phys);
   memset(dir, 0, sizeof(page_directory_t));
 
+
+  //printf("\nclone_directory() 3");
   //We need the physical address of the tablesPhysical member
   u32int offset = (u32int)dir->tablesPhysical - (u32int)dir;
   dir->physicalAddr = phys + offset;
 
+  //printf("\nclone_directory() 4");
   //copy each page table, unless it is 0, then we just leave it alone, because we initialized everything to 0
   for(int i = 0; i < 1024; i++){
     if(!src->tables[i]){
@@ -329,20 +334,24 @@ page_directory_t* clone_directory(page_directory_t* src){
 
 /* Clones a page table. */
 page_table_t* clone_table(page_table_t* src, u32int* physAddr){
-  printf("\nclone_table");
+  //printf("\nclone_table() 1");
 
   //create a new page table that is page aligned
   page_table_t* table = (page_table_t*)kmalloc_ap(sizeof(page_table_t), physAddr);
+  //printf("\nclone_table() 2");
+
 
   //Make sure the new table is all blank
   //memset(table, 0, sizeof(page_table_t));//the tutorial shows this as sizeof(page_directory_t) which i think is wrong.
   memset(table, 0, sizeof(page_directory_t));//the tutorial shows this as sizeof(page_directory_t) which i think is wrong.
 
+  //printf("\nclone_table() 3");
+
   //for every entry in the table. get a new frame, copy flags, and phyically copy the data
   for(int i = 0; i < 1024; i++){
     //if the src entry is 0, we don't need to do anything, as we already memset every location to 0
     if(!src->pages[i].frame){//this is different in tutorial src, vs examples
-      printf("\nclone_table frame is 0");
+      //printf("\nclone_table frame is 0");
       continue;
     }
 
@@ -356,11 +365,13 @@ page_table_t* clone_table(page_table_t* src, u32int* physAddr){
     if(src->pages[i].accessed)  table->pages[i].accessed = 1;
     if(src->pages[i].dirty)     table->pages[i].dirty = 1;
 
-    printf("\n copying frame: 0x%x", src->pages[i].frame*0x1000);
+    //printf("\n copying frame: 0x%x", src->pages[i].frame*0x1000);
     //physically copy the data from src to table frame using process.asm
     copy_page_physical(src->pages[i].frame*0x1000, table->pages[i].frame*0x1000);
     
   }
+  //printf("\nclone_table() return");
+
   return table;
 }
 

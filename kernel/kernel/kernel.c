@@ -86,7 +86,7 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
   paging_initialize();
 
   /* Start multitasking */
- // tasking_initialize();
+  tasking_initialize();
   
 
   //Initiaze the initial ramdisk (initrd) and set it as the filesystem root
@@ -100,12 +100,12 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
   printf("\n0x%x", do_page_fault);
 */
 
-/*Tasking testing
+//Tasking testing
   int ret = fork();
   printf("\nfork() returned: %i", ret);
   printf("\ngetpid() returned: %i", getpid());
   printf("\n==========================================");
-*/
+
 
    __asm__ __volatile__ ("sti");  //Enable Interrupts
   main_initialize();

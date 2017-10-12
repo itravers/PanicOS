@@ -30,10 +30,11 @@ u32int next_pid = 1;
 void tasking_initialize(){
   //disable interrupts
   asm volatile("cli");
-  
+ 
   //Relocate the stack, so we know where it is.
   move_stack((void*)0xE0000000, 0x2000);
-  
+  printf("\ntasking_initialize() 1"); 
+ 
   //Initialize the first task (kernel task)
   current_task = ready_queue = (task_t*)kmalloc(sizeof(task_t));
   current_task->id = next_pid++; //set id and increment next_pid
@@ -44,21 +45,26 @@ void tasking_initialize(){
 
   //Reenable Interrupts
   asm volatile("sti");
+
+  printf("\ntasking_initialize() 2"); 
 }
 
 /* Create a new process. Clone the address space of parent process
    And start the new process running at the same place the 
    parent process is currently at. */
 int fork(){
+//  printf("\nfork() 1");
   //Disable Interrupts
   asm volatile("cli");
 
+//  printf("\nfork() 2");
   //Create a pointer to the parents process' task struct for later reference
   task_t* parent_task = (task_t*)current_task;
 
   //Clone the parents address space
   page_directory_t* directory = clone_directory(current_task->page_directory);
 
+//  printf("\nfork() 3");
   //create a new processes
   task_t* new_task = (task_t*)kmalloc(sizeof(task_t));
   new_task->id = next_pid++; //set the id and increase next_pid;
@@ -74,6 +80,7 @@ int fork(){
   }
   tmp_task->next = new_task;
 
+//  printf("\nfork() 4");
   //get the instruction pointer (code entry point) for the new process
   u32int eip = read_eip();
   
@@ -88,6 +95,7 @@ int fork(){
     new_task->ebp = ebp;
     new_task->eip = eip;
 
+  //printf("\nfork() 5");
     //re-enable interrupts
     asm volatile("sti");
     
@@ -103,21 +111,28 @@ int fork(){
 
 void move_stack(void* new_stack_start, u32int size){
   //Allocate space for the new stack
+  //printf("\nmove_stack 1"); 
   //the stack grows downward, so increment backwards from start by a page size
-  for(u32int i = 0; i >=((u32int)new_stack_start-size); i -= 0x1000){
+  for(u32int i = (u32int)new_stack_start; i >=((u32int)new_stack_start-size); i -= 0x1000){
     //set new stack pages/frames to user mode and writable
     alloc_frame(get_page(i, 1, current_directory), 0/*user-mode*/, 1/*writable*/);
+    printf("\nalloc_frame at: 0x%x", i);
   }
 
+  //printf("\nmove_stack 2"); 
   //Paging has changed, flush the TLB, read cr3 into pd_addr, and write it back
   u32int pd_addr;
   asm volatile("mov %%cr3, %0" : "=r" (pd_addr)); //read cr3 into pd_addr
   asm volatile("mov %0, %%cr3" : : "r" (pd_addr)); //write pd_addr back to cr3
 
+  
+  //printf("\nmove_stack 3"); 
   //Read the current stack & base pointers
   u32int old_stack_pointer; asm volatile("mov %%esp, %0" : "=r" (old_stack_pointer));
   u32int old_base_pointer;  asm volatile("mov %%ebp, %0" : "=r" (old_base_pointer));
 
+
+  //printf("\nmove_stack 4"); 
   //calculate an offset to get from an address on the old stack to an address on the new
   u32int offset = (u32int)new_stack_start - initial_esp;
  
@@ -125,6 +140,16 @@ void move_stack(void* new_stack_start, u32int size){
   u32int new_stack_pointer = old_stack_pointer + offset;
   u32int new_base_pointer = old_base_pointer + offset;
 
+  printf("\n old_stack_pointer 0x%x", old_stack_pointer);
+  printf("\n old_base_pointer 0x%x", old_base_pointer);
+  printf("\n offset 0x%x", offset);
+  printf("\n new_stack_pointer 0x%x", new_stack_pointer);
+  printf("\n new_base_pointer 0x%x", new_base_pointer);
+
+  //printf("\nmove_stack 5");
+  //printf("\nmemcpy((void*)0x%x ,",new_stack_pointer);  
+  //printf("\n(void*)0x%x ,",old_stack_pointer);  
+  //printf("\n(%i))",(initial_esp - old_stack_pointer));  
   //copy the old stack to the new location
   memcpy((void*)new_stack_pointer, 
          (void*)old_stack_pointer,
@@ -139,10 +164,10 @@ void move_stack(void* new_stack_start, u32int size){
   // which registers it should have and point its stack pointer at its freshly
   // allocated stack
 
-/*
+
   // Backtrace through the original stack, copying new values into
   // the new stack.
-  for(i = (u32int)new_stack_start; i > (u32int)new_stack_start-size; i -= 4){
+  for(u32int i = (u32int)new_stack_start; i > (u32int)new_stack_start-size; i -= 4){
     u32int tmp = * (u32int*)i;
     // If the value of tmp is inside the range of the old stack, assume it is a base pointer
     // and remap it. This will unfortunately remap ANY value in this range, whether they are
@@ -153,12 +178,15 @@ void move_stack(void* new_stack_start, u32int size){
       *tmp2 = tmp;
     }
   } 
-*/
+// end of backtrace area
 
+  
+  //printf("\nmove_stack 6"); 
   //change stacks
   asm volatile("mov %0, %%esp" : : "r" (new_stack_pointer));
   asm volatile("mov %0, %%ebp" : : "r" (new_base_pointer)); 
  
+  //printf("\nmove_stack 7"); 
 }
 
 

@@ -77,7 +77,7 @@ u32int kmalloc(u32int sz){
 
 /* Expands the size of a given heap. */
 static void expand(u32int new_size, heap_t *heap){
-  printf("expanding kheap to %i", new_size);
+  //printf("\nexpanding kheap to 0x%x \n", new_size);
   // Sanity check. Make sure the expanded size is available in the heap area.
   ASSERT(new_size > heap->end_address - heap->start_address);
 
@@ -233,6 +233,7 @@ void *alloc(u32int size, u8int page_align, heap_t *heap){
     u32int old_end_address = heap->end_address;
 
     // We need to allocate some more space.
+    //printf("\n lets expand kheap by 0x%x", new_size);
     expand(old_length+new_size, heap);
     u32int new_length = heap->end_address-heap->start_address;
 
