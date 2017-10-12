@@ -9,7 +9,7 @@ int main_initialize(){
 //  printf("bss: 0x%x \n", &bss);
 
 
-   while(seconds_passed < 3){
+   while(seconds_passed < 1){
     terminal_getRow();
   }
 
@@ -21,7 +21,7 @@ int main_initialize(){
 
  // shell_initialize();
  
-   while(seconds_passed < 3){
+   while(seconds_passed < 2){
     terminal_getRow();
   }
   //terminal_clearScreen(); 

@@ -76,7 +76,8 @@ void process_command(){
     printf(" \t mem        : Lists Memory/RAM Info\n");
     printf(" \t ls         : Lists the File System\n");
     printf(" \t startscreen: Shows the Start Screen\n");
-    printf(" \t version    : Shows the Kernel Version");
+    printf(" \t version    : Shows the Kernel Version\n");
+    printf(" \t getpid     : Shows the Current Tasks ID");
   }else if(strcmp("mem", command) == 0){
     printf(" Memory Location: 0x%x\n", (u32int) memLoc);
     printf(" Memory Amount  : 0x%x", memAmt);
@@ -87,6 +88,8 @@ void process_command(){
     char* verBuf[256];
     u32int sz = read_fs(version_node, 0, 256, verBuf);
     printf(" PanicOS Version: %s", verBuf);
+  }else if(strcmp("getpid", command) == 0){
+    printf(" PID: %i", getpid());
   }else if(strcmp("startscreen", command) == 0){
     terminal_setWelcomeScreen();
   }else{
