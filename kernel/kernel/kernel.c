@@ -102,13 +102,50 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
 
 //Tasking testing
   int ret = fork();
+  int pid = getpid();
   printf("\nfork() returned: %i", ret);
-  printf("\ngetpid() returned: %i", getpid());
+  printf("\ngetpid() returned: %i", pid);
   printf("\n==========================================");
 
 
+/*  if(pid == 1){
+   // The next section of code is not reentrant so make sure we aren't interrupted during.
+   asm volatile("cli");
+   // list the contents of /
+   int i = 0;
+   struct dirent *node = 0;
+   while ( (node = readdir_fs(fs_root, i)) != 0)
+   {
+       printf("Found file ");
+       printf(node->name);
+       fs_node_t *fsnode = finddir_fs(fs_root, node->name);
+
+       if ((fsnode->flags&0x7) == FS_DIRECTORY)
+       {
+           printf("\n\t(directory)\n");
+       }
+       else
+       {
+           printf("\n\t contents: \"");
+           char buf[256];
+           u32int sz = read_fs(fsnode, 0, 256, buf);
+           int j;
+           for (j = 0; j < sz; j++)
+               printf(buf[j]);
+
+           printf("\"\n");
+       }
+       i++;
+   }
+   printf("\n");
+
+   asm volatile("sti");
+}else{
+*/
+  asm volatile("sti");
    __asm__ __volatile__ ("sti");  //Enable Interrupts
   main_initialize();
+  /*}*/
     for (;;);
 	return 0;
 }

@@ -26,8 +26,10 @@ void timer_handler(struct regs *r){
   /* Increment our 'tick count' */
   timer_ticks++;
 
+//  printf("\ntimer1");
   //switch tasks from task.c
-  switch_task();
+  switch_task(r);
+//  printf("\ntimer2");
 
   /* Every 18 clocks (approximately 1 second), we will
      increment seconds_passed */

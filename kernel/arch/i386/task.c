@@ -190,8 +190,11 @@ void move_stack(void* new_stack_start, u32int size){
 }
 
 
-/* Switch tasks to the next task on the ready_queue */
-void switch_task(){
+/* Switch tasks to the next task on the ready_queue 
+   Use struct regs to allow up so signal end of interrupt
+   as switch_task gets called by an interrupt, then 
+   never properly returns*/
+void switch_task(struct regs *r){
   //if we havn't initialized tasking yet, just return
   if(!current_task){
     return;
@@ -217,6 +220,8 @@ void switch_task(){
   //Were the tasks switched
   if(eip == 0x12345){
     //yes the tasks were switched, return now
+
+
     return;
   }
 
@@ -231,11 +236,19 @@ void switch_task(){
   //check if we just ran off the end of the linked list and start again at beginning
   if(!current_task) current_task = ready_queue;
 
+  eip = current_task->eip;
+  esp = current_task->esp;
+  ebp = current_task->ebp;
+
+  //printf("\nTEST");
+
+  current_directory = current_task->page_directory;
+
   //set the cpu registers eip, esp, and ebp to the current tasks registers 
-  perform_task_switch(current_task->eip, 
-                     current_task->page_directory->physicalAddr,
-                     current_task->ebp,
-                     current_task->esp);
+  perform_task_switch(eip, current_directory->physicalAddr, ebp, esp);
+  
+
+
 }
 
 /* Returns the id of the currently running task. */

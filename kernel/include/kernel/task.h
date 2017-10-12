@@ -10,6 +10,7 @@
 
 #include <stdlib.h> //for datatypes
 #include <kernel/paging.h> //for page_directory_t
+#include <regs.h>
 
 //Structure to define what a task is
 typedef struct task{
@@ -24,7 +25,7 @@ typedef struct task{
 void tasking_initialize();
 
 // Called by the timer, this changes the running process.
-void task_switch();
+void task_switch(struct regs* r);
 
 //Forks the current process, creates a new one with different memory space
 int fork();
