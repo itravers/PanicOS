@@ -33,6 +33,10 @@ It is derived from the following tutorials
 4. JamesM's kernel development tutorials (http://www.jamesmolloy.co.uk/tutorial_html/index.html)
    The first version of PanicOS's virtual filesystem and its initial
    ramdisks is is derived from JamesM's kernel development tutorials.
+
+5. The Little Book About OS Development (https://littleosbook.github.io/)
+   Useful for it's explainations about items. Used for the serial driver.
+   Useful to cross compare its explainations vs the other tutorials.
    
 Features
 --------
