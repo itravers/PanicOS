@@ -1,1 +1,1 @@
-g++ -w -o generate travrd_generator.c
+g++ -g -o generate travrd_generator.c
