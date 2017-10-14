@@ -18,6 +18,9 @@ char command_buf[256];
 int buf_location = 0;
 char* command; /* The command parsed */
 
+/* An array to hold the last 8 commands. */
+char* pre_command;
+
 extern int seconds_passed; /* From timer.c, the seconds passed since system boot, uptime*/
 extern u32int memLoc; /* Location of beginning of memory. Defined in mm.c. */
 extern int memAmt; /* The amount of memory detected. Defined in mm.c */
@@ -54,15 +57,18 @@ void wait_for_command(){
   while(lastChar != '\n'){
     terminal_getRow();//filler, not used except to cause while loop to wait
   }
+  
   //command = terminal_getCurrentRowChars();
   command = command_buf;
+  
+  strcpy(pre_command, command);
   lastChar = 0;
   //printf("command is: %s", command); 
 }
 
 /* Process a shell command. */
 void process_command(){
-
+  //printf("process_command:%s", command); 
   // Test our command to see if it matches a given command, if so, executes that command
   if(strcmp("cls", command) == 0){
     terminal_clearScreen();//cls clears the screen

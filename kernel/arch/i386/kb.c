@@ -85,7 +85,7 @@ unsigned char kbdus[128] = {
   0,	/* 69 - Num lock*/
   0,	/* Scroll Lock */
   0,	/* Home key */
-  0,	/* Up Arrow */
+  '\xDD',	/* Up Arrow */
   0,	/* Page Up */
   '-',
   0,	/* Left Arrow */
