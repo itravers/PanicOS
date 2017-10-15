@@ -14,3 +14,4 @@ rm -rfv sysroot
 rm -rfv isodir
 rm -rfv PanicOS.iso
 rm -rfv initrd.img
+rm -rfv travrd/travrd.img
