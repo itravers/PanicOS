@@ -1,6 +1,6 @@
 PanicOS - A Hobby Operating System
 ==================================
-Version 0.0.5
+Version 0.0.6
 
 <p align="center">
    <img src="https://i.imgur.com/6vBowK0.png" width="540" height="300" alt="PanicOS Screenshot"></img>
@@ -33,6 +33,10 @@ It is derived from the following tutorials
 4. JamesM's kernel development tutorials (http://www.jamesmolloy.co.uk/tutorial_html/index.html)
    The first version of PanicOS's virtual filesystem and its initial
    ramdisks is is derived from JamesM's kernel development tutorials.
+
+5. The Little Book About OS Development (https://littleosbook.github.io/)
+   Useful for it's explainations about items. Used for the serial driver.
+   Useful to cross compare its explainations vs the other tutorials.
    
 Features
 --------
