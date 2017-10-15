@@ -3,10 +3,18 @@
  * Date: 10/13/2017
  * Generates a travRD Initial Ram Disk
  * Specifically for use in PanicOS
+ *
+ * The travrd.img generated will look as follows
+ * |4 bytes-|----------------------------------------------
+ * |numFiles| header | header | header | for as many files as there are 
+ * -|offset after headers|---------------------------------
+ * |file1|file2|file3|file4 etc
+ * --------------------------------------------------------
  */
 
 #include <stdio.h> //For printf
 #include <stdlib.h> //For malloc
+#include <stdint.h> //For u8int types
 #include <dirent.h> //For directory functions
 #include <string.h> //for strcmp
 #include <unistd.h> //For chdir()
@@ -17,7 +25,7 @@ enum FILETYPE {DIRECTORY, AFILE};
 
 /* Used in the header section of travRD, to show where a file is */
 typedef struct travrd_header{
-  unsigned char   magic; //Check if we are really at a header
+  uint16_t   magic; //Check if we are really at a header
   char            name[64]; //Names can be 64 characters long
   char            parentName[64]; //Names can be 64 characters long
   unsigned int    offset; //Offset from the start of the file section the header is located
@@ -55,7 +63,8 @@ void print_header(travrd_header_t h);
 /** Function Definitions. */
 
 int main(int argc, char **argv){
-  //printf("travrd_header size: %u bytes \n", sizeof(travrd_header));
+  printf("travrd_header size: %u bytes \n", sizeof(travrd_header));
+  printf("unsigned int size: %u bytes \n", sizeof(unsigned int));
   //printf("FILETYPE size: %d bytes \n", sizeof(FILETYPE));
   printf("==================================\n");
 
@@ -97,12 +106,12 @@ int main(int argc, char **argv){
 
  // printf("filecontent 0 : %s\n", *(fileContent+5));
 
-  /*for(int i = 0; i < numFiles; i++){
-    printf("\nfileContent[%d] :", i);
-    printf(" %s\n", fileContent[i]);
+  for(int i = 0; i < numFiles; i++){
+  //  printf("\nfileContent[%d] :", i);
+  //  printf(" %s\n", fileContent[i]);
 
     print_header(headers[i]);
-  }*///looks like headers and files are correct now
+  }//looks like headers and files are correct now
 
   //Open the img file, write the numFiles, then write the headers, then write the filecontents
   FILE *wstream = fopen("./travrd.img", "w");
@@ -136,8 +145,8 @@ void print_header(travrd_header_t h){
   printf("h.magic        : 0x%x\n", h.magic);
   printf("h.name         : %s\n", h.name);
   printf("h.parentName   : %s\n", h.parentName);
-  printf("h.offset       : %d\n", h.offset);
-  printf("h.length       : %d\n", h.length);
+  printf("h.offset       : 0x%x\n", h.offset);
+  printf("h.length       : 0x%x\n", h.length);
   printf("h.fileNum      : %d\n", h.fileNum);
 
   printf("=====================\n");
@@ -261,7 +270,7 @@ void setup_headers_directory(const char* dirName, const char* parentName){
   fileContent[currentHeader] = directoryContent;
   
   //printf(" : parent - %s\n", parentName);
-  headers[currentHeader].magic = 0x66;
+  headers[currentHeader].magic = 0xBABE;
   strcpy(headers[currentHeader].name, dirName);
   strcpy(headers[currentHeader].parentName, parentName);
   headers[currentHeader].offset = currentHeaderOffset;
@@ -312,7 +321,7 @@ void setup_headers_file(const char* fileName, const char* parentName){
 
 
   //setup header for file
-  headers[currentHeader].magic = 0x66;
+  headers[currentHeader].magic = 0xBABE;
   strcpy(headers[currentHeader].name, fileName);
   strcpy(headers[currentHeader].parentName, parentName);
   headers[currentHeader].offset = currentHeaderOffset;
