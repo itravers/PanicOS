@@ -27,7 +27,7 @@ enum FILETYPE {DIRECTORY, AFILE};
 typedef struct travrd_header{
   uint16_t   magic; //Check if we are really at a header
   char            name[64]; //Names can be 64 characters long
-  char            parentName[64]; //Names can be 64 characters long
+  int             parentNum; //the number of the parent file
   unsigned int    offset; //Offset from the start of the file section the header is located
   unsigned int    length; //The length of the file
   unsigned int    fileNum;
@@ -52,19 +52,17 @@ unsigned int currentHeaderOffset = 0;
 unsigned int offsetToFiles = 0;
 
 /** Function Prototypes. */
-void read_directory(char* dirName, char* parentName);
 unsigned int count_entries(const char* dirName);
-void read_file(char* fileName);
-void setup_headers(const char* dirName, const char* parentName);
-void setup_headers_directory(const char* dirName, const char* parentName);
-void setup_headers_file(const char* fileName, const char* parentName);
+void setup_headers(const char* dirName, int parentNum);
+int setup_headers_directory(const char* dirName, int parentNum);
+void setup_headers_file(const char* fileName, int parentNum);
 void print_header(travrd_header_t h);
 
 /** Function Definitions. */
 
 int main(int argc, char **argv){
-  printf("travrd_header size: %u bytes \n", sizeof(travrd_header));
-  printf("unsigned int size: %u bytes \n", sizeof(unsigned int));
+  //printf("travrd_header size: %u bytes \n", sizeof(travrd_header));
+  //printf("unsigned int size: %u bytes \n", sizeof(unsigned int));
   //printf("FILETYPE size: %d bytes \n", sizeof(FILETYPE));
   printf("==================================\n");
 
@@ -79,8 +77,6 @@ int main(int argc, char **argv){
 
   //allocate enough room for all the pointers needed in fileContent
   int allocSize = (numFiles+1) * sizeof(char*);
-  //printf("Allocating room for %u ponters in fileContent\n", (unsigned int)(allocSize/sizeof(char*)));
-  //fileContent = (char**)malloc(allocSize);
 
   //set the offset to where the files start
   //which is 1 int, and numFiles travrd_headers
@@ -91,25 +87,12 @@ int main(int argc, char **argv){
   currentHeaderOffset = offsetToFiles;
 
   //setup the file headers for files directory, and all directories below it.
-  setup_headers("files", "0");    
-
+  setup_headers("files", -1);    
   printf("numHeader: %d\n", currentHeader);
-
-/*
-  printf("fileContent[0] : %s\n", fileContent[0]);
-  printf("fileContent[1] : %s\n", fileContent[1]);
-  printf("fileContent[2] : %s\n", fileContent[2]);
-  printf("fileContent[3] : %s\n", fileContent[3]);
-  printf("fileContent[4] : %s\n", fileContent[4]);
-  printf("fileContent[5] : %s\n", fileContent[5]);
-*/
-
- // printf("filecontent 0 : %s\n", *(fileContent+5));
 
   for(int i = 0; i < numFiles; i++){
   //  printf("\nfileContent[%d] :", i);
   //  printf(" %s\n", fileContent[i]);
-
     print_header(headers[i]);
   }//looks like headers and files are correct now
 
@@ -127,16 +110,12 @@ int main(int argc, char **argv){
     fwrite(fileContent[i], 1, headers[i].length, wstream);
   }
 
-
-
   //close the img file
   fclose(wstream);
 
 
-
   printf("==================================\n");
   printf("\nnumFiles: %d\n", numFiles);
-
   return 0; 
 }
 
@@ -144,11 +123,10 @@ void print_header(travrd_header_t h){
   printf("PRINTING HEADER =========\n");
   printf("h.magic        : 0x%x\n", h.magic);
   printf("h.name         : %s\n", h.name);
-  printf("h.parentName   : %s\n", h.parentName);
+  printf("h.parentNum    : %i\n", h.parentNum);
   printf("h.offset       : 0x%x\n", h.offset);
   printf("h.length       : 0x%x\n", h.length);
   printf("h.fileNum      : %d\n", h.fileNum);
-
   printf("=====================\n");
 }
 
@@ -185,33 +163,29 @@ unsigned int count_entries(const char* dirName){
 /* Sets up the headers array for the current directory
  * If parent name is NULL it means this is the top
  * level directory of the travRD filesystem.*/
-void setup_headers(const char* dirName, const char* parentName){
- // printf("Settingup Headers\n");
-  
+void setup_headers(const char* dirName, int parentNum){
   DIR* d;
   struct dirent* dir;
   d = opendir(dirName);
-  setup_headers_directory(dirName, parentName);
+  int thisFileNum = setup_headers_directory(dirName, parentNum);
   if(d){
     while((dir = readdir(d)) != NULL){
       if(dir->d_type == DT_DIR &&
           strcmp(dir->d_name, ".") != 0 &&
           strcmp(dir->d_name, "..") != 0){
         //recursively call this function on next directory
-    //    printf("cd %s\n", dirName);
         chdir(dirName);
-        setup_headers(dir->d_name, dirName);
+        setup_headers(dir->d_name, thisFileNum);
       }else if(dir->d_type == DT_REG){
-    //    printf("cd %s\n", dirName);
         chdir(dirName);
-        setup_headers_file(dir->d_name, dirName);
+        setup_headers_file(dir->d_name, thisFileNum);
         chdir("..");
-      
       }
-    } 
-    closedir(d);
+    }
+    printf("\n\n CLOSE DIR \n\n"); 
+    //closedir(d);
   }
-  if(strcmp(parentName, "0") == 0){
+  if(parentNum == -1){
     //we are the top level directory, don't chdir to parent
   }else{
     //printf("cd parent: %s\n\n", parentName);
@@ -219,7 +193,7 @@ void setup_headers(const char* dirName, const char* parentName){
   }
 }
 
-void setup_headers_directory(const char* dirName, const char* parentName){
+int setup_headers_directory(const char* dirName, int parentNum){
   printf("\nsetting headers for directory: %s\n", dirName);
   DIR* d;
   struct dirent* dir;
@@ -235,8 +209,6 @@ void setup_headers_directory(const char* dirName, const char* parentName){
         //get the size of each name and add it to size + 1 for a seperator we'll insert later
         int sizeOfString = ((strlen(dir->d_name)+1) * sizeof(char));
         size += sizeOfString;
-        //printf("dir->d_name: %s", dir->d_name);
-        //printf(" is size: %d\n", sizeOfString);
       }
     }
   }//end getting size of entries
@@ -246,7 +218,6 @@ void setup_headers_directory(const char* dirName, const char* parentName){
   //room in a char* to contain all the information
   char* directoryContent = (char*)malloc((size+2)); //+2 so we can insert a - and  '\0' 
   printf("allocating %d size for directoryContent\n", ((size+2))); 
-  //directoryContent[0] = '\0'; 
   strcpy(directoryContent, "-");  
 
   //now loop through the directory again, and concatonate each name to directoryInfo
@@ -258,7 +229,6 @@ void setup_headers_directory(const char* dirName, const char* parentName){
       if(strcmp(dir->d_name, ".") != 0 && strcmp(dir->d_name, "..") != 0 ){
         strcat(directoryContent, dir->d_name);
         strcat(directoryContent, "-");
-       
       }
     }
     strcat(directoryContent, "\0");
@@ -266,29 +236,32 @@ void setup_headers_directory(const char* dirName, const char* parentName){
   closedir(d);
   
   printf("DIRCONTENT[%d] %s\n", currentHeader, directoryContent);
-  //printf("typeof directoryContent %d", directoryContent);
   fileContent[currentHeader] = directoryContent;
   
-  //printf(" : parent - %s\n", parentName);
   headers[currentHeader].magic = 0xBABE;
   strcpy(headers[currentHeader].name, dirName);
-  strcpy(headers[currentHeader].parentName, parentName);
+  headers[currentHeader].parentNum = parentNum;
+  //strcpy(headers[currentHeader].parentName, parentName);
   headers[currentHeader].offset = currentHeaderOffset;
   headers[currentHeader].length = size;
   headers[currentHeader].fileNum = currentHeader;
   headers[currentHeader].type = DIRECTORY;
 
+  int thisFileNum = currentHeader;
+
   //increase currentHeaderOffset here
   currentHeaderOffset += size; 
   currentHeader++;
+  return thisFileNum;
 }
 
-void setup_headers_file(const char* fileName, const char* parentName){
+void setup_headers_file(const char* fileName, int parentNum){
   printf("setting headers for file     : %s", fileName);
-  printf(" : parent - %s\n", parentName);
+  printf(" : parent - %d\n", parentNum);
     
   //get file size here
   int fileSize = 0;
+  
   //open the file and seek to the end
   FILE *stream = fopen(fileName, "r");
   if(stream == 0){
@@ -301,7 +274,6 @@ void setup_headers_file(const char* fileName, const char* parentName){
     fclose(stream);
   } 
 
-  
   unsigned char* content = (unsigned char*)malloc(fileSize+2); //+2 so we can insert a - and  '\0'
   printf(" Allocating room for file: %d\n", fileSize+2); 
 
@@ -319,74 +291,18 @@ void setup_headers_file(const char* fileName, const char* parentName){
   fileContent[currentHeader] = (char*) content;
   fclose(readstream);
 
-
   //setup header for file
   headers[currentHeader].magic = 0xBABE;
   strcpy(headers[currentHeader].name, fileName);
-  strcpy(headers[currentHeader].parentName, parentName);
+  //strcpy(headers[currentHeader].parentName, parentName);
+  headers[currentHeader].parentNum = parentNum;
   headers[currentHeader].offset = currentHeaderOffset;
   headers[currentHeader].length = fileSize;
   headers[currentHeader].fileNum = currentHeader;
   headers[currentHeader].type = AFILE;
 
-
   //increase currentHeaderOffset Here
   currentHeaderOffset += fileSize;
   currentHeader++;
 }
-
-void read_directory(char* dirName, char* parentName){
-  DIR* d;
-  struct dirent* dir;
-  d = opendir(dirName);
-  if(d){
-    if(strcmp(dirName, "files") == 0){
-    
-    }else{
-      printf("READING DIRECTORY %s\n", dirName);
-    }
-    while((dir = readdir(d)) != NULL){
-      //read all children directories, but not . or ..
-      //printf("ORDER: %s\n", dir->d_name);
-       if(dir->d_type == DT_DIR && 
-            strcmp(dir->d_name, ".") != 0 &&
-            strcmp(dir->d_name, "..") != 0){
-        int ret =  chdir(dirName);
-       // printf("chdir ret: %d", ret);
-         read_directory(dir->d_name, dirName);
-         //printf("found: %s\n", dir->d_name);
-      }else if(dir->d_type == DT_REG){
-        read_file(dir->d_name);
-      }
-    }
-    closedir(d);
-  }
-  if(strcmp(dirName, "files") == 0){
-    //dont chdir to parent
-  }else{
-    chdir("..");
-  }
-  return;
-}
-
-void read_file(char* fileName){
-  printf("READING FILE      %s\n", fileName);
-  return;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
