@@ -9,7 +9,8 @@
 #include <kernel/fs.h>
 #include <kernel/serial.h>
 #include <kernel/main.h>//For main_initialize
-#include <kernel/initrd.h> //For initrd_initialize
+//#include <kernel/initrd.h> //For initrd_initialize
+#include <kernel/travrd.h> //For initrd_initialize
 #include <kernel/paging.h> //for paging_initialize
 #include <kernel/task.h> //for tasking_initialize
 #include <kernel/mm.h> //For mm_initialize
@@ -31,7 +32,7 @@
 /* Structure passed in by start.asm. Used to access bootloader info
    We use this in mm.c to find the location of usable memory. */
 struct multiboot_info* mbt;
-u32int initrd_location;
+u32int travrd_location;
 
 /*Passed in by start.asm. Tells us the physical location
   of the initial stack. */
@@ -63,7 +64,7 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
   initial_esp = initial_stack; //provide the location of the initial stack pointer
 
   /* Find the initrd location from mbt */
-  initrd_location = *((u32int*)mbt->mods_addr);
+  travrd_location = *((u32int*)mbt->mods_addr);
 
 	gdt_install();
 	idt_install();
@@ -74,7 +75,7 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
   timer_install();
   keyboard_install();
   //serial_write(SERIAL_COM1_BASE, 'h');
-  mm_initialize(initrd_location);
+  mm_initialize(travrd_location);
   printf("\nMultiboot Magic 0x%x", magic);
   printf("\nMultiboot Mods Loaded: %i", mbt->mods_count);//must be after terminal_init
   printf("\nInitial Stack: 0x%x", initial_esp);
@@ -90,9 +91,9 @@ int main(struct multiboot_info* mbtt, unsigned int magic, unsigned int initial_s
   
 
   //Initiaze the initial ramdisk (initrd) and set it as the filesystem root
-  fs_root = initrd_initialize(initrd_location);
-  printf("\ninitrd_location: 0x%x \n", (unsigned int)initrd_location);
-  printf("\nfs_root in init: 0x%x \n", (unsigned int)fs_root);
+  fs_root = travrd_initialize(travrd_location);
+  printf("\ntravrd_location: 0x%x \n", (unsigned int)travrd_location);
+  //printf("\nfs_root in init: 0x%x \n", (unsigned int)fs_root);
 
 /*//page fault testing
   printf("\nhello paging world!");

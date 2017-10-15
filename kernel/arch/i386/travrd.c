@@ -14,7 +14,7 @@ travrd_file_header_t *file_headers; // The list of file headers.
 fs_node_t *travrd_root;             // Our root directory node.
 fs_node_t *travrd_dev;              // We also add a directory node for /dev, so we can mount devfs later on.
 fs_node_t *root_nodes;              // List of file nodes.
-unsigned int nroot_nodes;                    // Number of file nodes.
+unsigned int nroot_nodes;           // Number of file nodes.
 
 
 struct dirent dirent;
@@ -77,28 +77,28 @@ fs_node_t *travrd_initialize(u32int location){
   // Initialise the root directory.
   travrd_root = (fs_node_t*)kmalloc(sizeof(fs_node_t));
   strcpy(travrd_root->name, "travrd");
-  travrd_root->mask = initrd_root->uid = initrd_root->gid = initrd_root->inode = initrd_root->length = 0;
+  travrd_root->mask = travrd_root->uid = travrd_root->gid = travrd_root->inode = travrd_root->length = 0;
   travrd_root->flags = FS_DIRECTORY;
   travrd_root->read = 0;
   travrd_root->write = 0;
   travrd_root->open = 0;
   travrd_root->close = 0;
-  travrd_root->readdir = &initrd_readdir;
-  travrd_root->finddir = &initrd_finddir;
+  travrd_root->readdir = &travrd_readdir;
+  travrd_root->finddir = &travrd_finddir;
   travrd_root->ptr = 0;
   travrd_root->impl = 0;
 
   // Initialise the /dev directory (required!)
   travrd_dev = (fs_node_t*)kmalloc(sizeof(fs_node_t));
   strcpy(travrd_dev->name, "dev");
-  travrd_dev->mask = initrd_dev->uid = initrd_dev->gid = initrd_dev->inode = initrd_dev->length = 0;
+  travrd_dev->mask = travrd_dev->uid = travrd_dev->gid = travrd_dev->inode = travrd_dev->length = 0;
   travrd_dev->flags = FS_DIRECTORY;
   travrd_dev->read = 0;
   travrd_dev->write = 0;
   travrd_dev->open = 0;
   travrd_dev->close = 0;
-  travrd_dev->readdir = &initrd_readdir;
-  travrd_dev->finddir = &initrd_finddir;
+  travrd_dev->readdir = &travrd_readdir;
+  travrd_dev->finddir = &travrd_finddir;
   travrd_dev->ptr = 0;
   travrd_dev->impl = 0;
 
@@ -114,7 +114,7 @@ fs_node_t *travrd_initialize(u32int location){
     file_headers[i].offset += location;
     // Create a new file node.
     strcpy(root_nodes[i].name, file_headers[i].name);
-    //printf("\nroot_notes.name: %s", root_nodes[i].name);
+    printf("\nroot_notes.name: %s", root_nodes[i].name);
     //save the version.txt files node, for later reference
     if(strcmp(root_nodes[i].name, "version.txt") == 0){
       version_node = &root_nodes[i];
@@ -124,8 +124,8 @@ fs_node_t *travrd_initialize(u32int location){
 
     root_nodes[i].mask = root_nodes[i].uid = root_nodes[i].gid = 0;
     root_nodes[i].length = file_headers[i].length;
-    root_nodes[i].inode = i;
-    root_nodes[i].flags = FS_FILE;
+    root_nodes[i].inode = file_headers[i].fileNum;
+    root_nodes[i].parentInode = file_headers[i].parentNum;
     root_nodes[i].read = &travrd_read;
     root_nodes[i].write = 0;
     root_nodes[i].readdir = 0;
@@ -133,6 +133,12 @@ fs_node_t *travrd_initialize(u32int location){
     root_nodes[i].open = 0;
     root_nodes[i].close = 0;
     root_nodes[i].impl = 0;
+    
+    if(file_headers[i].type == AFILE){
+      root_nodes[i].flags = FS_FILE;
+    }else if(file_headers[i].type == DIRECTORY){
+      root_nodes[i].flags = FS_DIRECTORY;
+    }
   }
   return travrd_root;
 }

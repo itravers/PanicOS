@@ -37,6 +37,7 @@ typedef struct fs_node
     u32int gid;         // The owning group.
     u32int flags;       // Includes the node type. See #defines above.
     u32int inode;       // This is device-specific - provides a way for a filesystem to identify files.
+    u32int parentInode; // the inode of the parent
     u32int length;      // Size of the file, in bytes.
     u32int impl;        // An implementation-defined number.
     read_type_t read;
