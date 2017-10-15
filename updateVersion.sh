@@ -5,6 +5,6 @@ else
   sed -i 's/^Version.*/Version '"$1"'/' README.md
 
   #update the text in initrd/files/version.txt
-  sed -i '1s/.*/'"$1"'/' initrd/files/version.txt
+  sed -i '1s/.*/'"$1"'/' travrd/files/config/version.txt
   
 fi
